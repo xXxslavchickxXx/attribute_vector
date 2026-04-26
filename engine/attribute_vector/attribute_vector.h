@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../versionedVector/versioned_vector.h"
+#include "../tags/tags.h"
 #include <tuple>
 
 namespace engine::data {
