@@ -2,6 +2,7 @@
 
 #include "../versionedVector/versioned_vector.h"
 #include "../tags/tags.h"
+#include "../io/io.h"
 #include <tuple>
 
 namespace engine::data {

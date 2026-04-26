@@ -21,6 +21,10 @@ namespace engine::data {
 		template<typename Tag>
 		const Vec<typename Tag::type>& vector() const;
 
+		/// Методы вставки в другой контейнер
+		template<typename ProxyType>
+		void insert_proxy(const ProxyType& proxy) requires (!Is_const);
+
 		/// Методы вставки
 		template<typename... Containers>
 		void insert_containers(size_t where, const Containers&... containers) requires (!Is_const);
@@ -98,6 +102,11 @@ namespace engine::data {
 		template<typename Tag, typename F>
 		void call(F&& f) {
 			f.operator()<Tag>();
+		}
+
+		friend std::ostream& operator<<(std::ostream& os, const multi_proxy& proxy) {
+			((os << proxy.vector<SelectedTags>()), ...);
+			return os;
 		}
 	};
 }
