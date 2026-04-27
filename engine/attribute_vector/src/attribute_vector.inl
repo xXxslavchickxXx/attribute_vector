@@ -6,6 +6,16 @@
 
 namespace engine::data {
 	template<template<typename...> typename Vec, typename... Tags>
+	template<template<typename...> typename AnotherVec, typename... AnotherTags>
+	void attribute_vector<Vec, Tags...>::
+		insert(size_t where, const attribute_vector<AnotherVec, AnotherTags...>& vec)
+	{
+		static_assert(SameTags<std::tuple<Tags...>, std::tuple<AnotherTags...>>, 
+			"The tags of the copied attribute_vector do not match the current attribute_vector.");
+		this->with<Tags...>().insert(where, vec.with<AnotherTags...>());
+	}
+
+	template<template<typename...> typename Vec, typename... Tags>
 	template<typename Tag>
 	auto attribute_vector<Vec, Tags...>::attribute() {
 		return single_proxy<false, Tag>(_data);
@@ -59,16 +69,11 @@ namespace engine::data {
 
 	template<template<typename...> typename Vec, typename... Tags>
 	template<typename... SelectedTags>
-	auto attribute_vector<Vec, Tags...>::with() const {
+	const auto attribute_vector<Vec, Tags...>::with() const {
 		static_assert((hasTag<SelectedTags, Tags...>() && ...),
 			"one of the tags is not in the collection");
 
 		return multi_proxy<true, SelectedTags...>(_data);
-	}
-
-	template<typename Tag, typename... Tags>
-	constexpr bool hasTag() {
-		return (std::is_same_v<Tag, Tags> || ...);
 	}
 
 	template<template<typename...> typename Vec, typename... Tags>

@@ -3,12 +3,9 @@
 #include "../versionedVector/versioned_vector.h"
 #include "../tags/tags.h"
 #include "../io/io.h"
-#include <tuple>
+#include "../type_traits/type_traits.h"
 
 namespace engine::data {
-	template<typename Tag, typename... Tags>
-	constexpr bool hasTag();
-	
 	template<template<typename...> typename Vec, typename... Tags>
 	class attribute_vector {
 		std::tuple<Vec<typename Tags::type>...> _data;
@@ -17,7 +14,7 @@ namespace engine::data {
 		template<typename... SelectedTags>
 		auto with();
 		template<typename... SelectedTags>
-		auto with() const;
+		const auto with() const;
 
 		template<typename Tag>
 		auto attribute();
@@ -27,6 +24,9 @@ namespace engine::data {
 
 		size_t size() const;
 		void show_vector() const;
+
+		template<template<typename...> typename AnotherVec, typename... AnotherTags>
+		void insert(size_t where, const attribute_vector<AnotherVec, AnotherTags...>& vec);
 
 	public:
 		template<bool Is_const, typename... SelectedTags>
@@ -46,6 +46,11 @@ namespace engine::data {
 		attribute_vector(std::initializer_list<typename Tags::type>... lists);
 		template<typename... Containers>
 		attribute_vector(Containers&&... containers) requires(sizeof...(containers) == sizeof...(Tags));
+
+		friend std::ostream& operator<<(std::ostream& os, const attribute_vector& vec) {
+			os << vec.with<Tags...>();
+			return os;
+		}
 
 	/// <summary>
 	/// Поленые методы

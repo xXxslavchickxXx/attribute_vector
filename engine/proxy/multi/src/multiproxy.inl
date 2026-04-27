@@ -4,7 +4,42 @@ namespace engine::data {
 
 	template<template<typename...> typename Vec, typename... Tags>
 	template<bool Is_const, typename... SelectedTags>
+	template<bool AnotherIs_const, typename... AnotherSelectedTags>
+	void attribute_vector<Vec, Tags...>::multi_proxy<Is_const, SelectedTags...>::
+	insert(size_t where, const multi_proxy<AnotherIs_const, AnotherSelectedTags...>& proxy) requires (!Is_const) {
+
+		using CurrentTags = std::tuple<SelectedTags...>;
+		using InnerTags = std::tuple<AnotherSelectedTags...>;
+
+		static_assert(tagsAreSame<CurrentTags, InnerTags>(),
+			"tags of the copied proxy do not match the current proxy");
+
+		[&]<size_t... Is>(std::index_sequence<Is...>) {
+			
+			((
+				this->insert_container<std::tuple_element_t<Is, InnerTags>>(
+					where, proxy.vector<std::tuple_element_t<Is, InnerTags>>()
+				)
+			), ...);
+
+		}(std::make_index_sequence<std::tuple_size_v<InnerTags>>{});
+
+		auto inserter = [&]<typename Tag>() {
+			std::vector<typename Tag::type> default_vec(proxy.size(), Tag::defaultValue());
+			insert_container<Tag>(where, default_vec);
+		};
+
+		execute_for_other(inserter);
+	}
+
+	template<template<typename...> typename Vec, typename... Tags>
+	template<bool Is_const, typename... SelectedTags>
 	attribute_vector<Vec, Tags...>::multi_proxy<Is_const, SelectedTags...>::multi_proxy(TupleType& data)
+		: _data(&data)
+	{}
+	template<template<typename...> typename Vec, typename... Tags>
+	template<bool Is_const, typename... SelectedTags>
+	attribute_vector<Vec, Tags...>::multi_proxy<Is_const, SelectedTags...>::multi_proxy(const TupleType& data)
 		: _data(&data)
 	{}
 
@@ -137,7 +172,7 @@ namespace engine::data {
 
 	template<template<typename...> typename Vec, typename... Tags>
 	template<bool Is_const, typename... SelectedTags>
-	size_t attribute_vector<Vec, Tags...>::multi_proxy<Is_const, SelectedTags...>::
+	constexpr size_t attribute_vector<Vec, Tags...>::multi_proxy<Is_const, SelectedTags...>::
 		size() const {
 		if constexpr (sizeof...(SelectedTags) > 0) {
 			return std::get<0>(*_data).size();
@@ -259,7 +294,9 @@ namespace engine::data {
 	template<template<typename...> typename Vec, typename... Tags>
 	template<bool Is_const, typename... SelectedTags>
 	template<typename Tag>
-	constexpr size_t attribute_vector<Vec, Tags...>::multi_proxy<Is_const, SelectedTags...>::getTagIndex() const {
+	constexpr size_t attribute_vector<Vec, Tags...>::multi_proxy<Is_const, SelectedTags...>::
+		getTagIndex() const
+	{
 		static_assert(hasTag<Tag, Tags...>(), "tag doesn't excist in this attrib_vector");
 
 		using Tuple = std::tuple<Tags...>;

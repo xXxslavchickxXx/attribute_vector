@@ -12,18 +12,20 @@ namespace engine::data {
 		// В зависимости от значение Is_const выбираем тип прокси
 		using TupleType = std::tuple<Vec<typename Tags::type>...>;
 		using PointerType = std::conditional_t<Is_const, const TupleType*, TupleType*>;
+		using tags = std::tuple<SelectedTags...>;
 
 		PointerType _data;
 
 	public:
 		multi_proxy(TupleType& data);
+		multi_proxy(const TupleType& data);
 
 		template<typename Tag>
 		const Vec<typename Tag::type>& vector() const;
 
 		/// Методы вставки в другой контейнер
-		template<typename ProxyType>
-		void insert_proxy(const ProxyType& proxy) requires (!Is_const);
+		template<bool AnotherIs_const, typename... AnotherSelectedTags>
+		void insert(size_t where, const multi_proxy<AnotherIs_const, AnotherSelectedTags...>& proxy) requires (!Is_const);
 
 		/// Методы вставки
 		template<typename... Containers>
@@ -65,7 +67,7 @@ namespace engine::data {
 		void execute_for_all(F&& func);
 
 	public:
-		size_t size() const;
+		constexpr size_t size() const;
 		size_t capacity() const;
 
 	/// Реализации внутренних методов, то что пользователь не должен видеть вообще
@@ -101,11 +103,15 @@ namespace engine::data {
 		// Отдельно - для того что скрыть ужасный синтаксис
 		template<typename Tag, typename F>
 		void call(F&& f) {
-			f.operator()<Tag>();
+			f.template operator()<Tag>();
 		}
 
 		friend std::ostream& operator<<(std::ostream& os, const multi_proxy& proxy) {
-			((os << proxy.vector<SelectedTags>()), ...);
+			((os << proxy.vector<SelectedTags>() << '\n'), ...);
+			return os;
+		}
+		friend std::ostream& operator<<(std::ostream& os, multi_proxy&& proxy) {
+			((os << proxy.vector<SelectedTags>() << '\n'), ...);
 			return os;
 		}
 	};
