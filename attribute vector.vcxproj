@@ -131,7 +131,23 @@
     <ClCompile Include="attribute vector.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="engine\attribute_vector\attribute_vector.h" />
+    <ClInclude Include="engine\io\io.h" />
+    <ClInclude Include="engine\proxy\multi\multi_proxy.h" />
+    <ClInclude Include="engine\proxy\single\singleproxy.h" />
+    <ClInclude Include="engine\tags\tags.h" />
     <ClInclude Include="engine\test_tags\tags.h" />
+    <ClInclude Include="engine\type_traits\type_traits.h" />
+    <ClInclude Include="engine\versionedVector\versioned_vector.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
+    <None Include="attribute vector.slnx" />
+    <None Include="CppProperties.json" />
+    <None Include="engine\attribute_vector\src\attribute_vector.inl" />
+    <None Include="engine\proxy\multi\src\multiproxy.inl" />
+    <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

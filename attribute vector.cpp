@@ -9,5 +9,7 @@ int main()
 {
     data::attribute_vector<data::VersionedVector, Position, Color> vec({glm::vec3(1.f)}, {glm::vec4(2.f)});
 
+    vec.with<Position>().insert(0, { glm::vec3(1.f) });
+
     std::cout << vec.with<Color, Position>();
 }
