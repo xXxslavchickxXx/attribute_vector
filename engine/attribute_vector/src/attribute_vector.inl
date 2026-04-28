@@ -96,6 +96,11 @@ namespace engine::data {
 	}
 
 	template<template<typename...> typename Vec, typename... Tags>
+	size_t attribute_vector<Vec, Tags...>::capacity() const {
+		return std::get<0>(_data).capacity();
+	}
+
+	template<template<typename...> typename Vec, typename... Tags>
 	void attribute_vector<Vec, Tags...>::validate_sizes() const {
 		std::apply([](const auto&... vectors) {
 			auto first_size = std::get<0>(std::tie(vectors...)).size();

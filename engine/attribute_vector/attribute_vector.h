@@ -23,6 +23,8 @@ namespace engine::data {
 		auto attribute() const;
 
 		size_t size() const;
+		size_t capacity() const;
+
 		void show_vector() const;
 
 		template<template<typename...> typename AnotherVec, typename... AnotherTags>

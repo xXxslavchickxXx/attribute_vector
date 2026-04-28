@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="attribute vector.cpp">
+    <ClCompile Include="tests\test.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -23,5 +23,39 @@
     <ClInclude Include="engine\test_tags\tags.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="engine\attribute_vector\attribute_vector.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\io\io.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\proxy\multi\multi_proxy.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\proxy\single\singleproxy.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\tags\tags.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\type_traits\type_traits.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\versionedVector\versioned_vector.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
+    <None Include="attribute vector.slnx" />
+    <None Include="CppProperties.json" />
+    <None Include="engine\attribute_vector\src\attribute_vector.inl">
+      <Filter>Файлы заголовков</Filter>
+    </None>
+    <None Include="engine\proxy\multi\src\multiproxy.inl">
+      <Filter>Файлы заголовков</Filter>
+    </None>
+    <None Include="README.md" />
   </ItemGroup>
 </Project>

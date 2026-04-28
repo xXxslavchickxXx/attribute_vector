@@ -160,6 +160,14 @@ namespace engine::data {
 
 		using const_iterator = std::vector<T>::const_iterator;
 
+		const_iterator begin() const {
+			return rawVector.begin();
+		}
+
+		const_iterator end() const {
+			return rawVector.end();
+		}
+
 		const_iterator cbegin() {
 			return rawVector.cbegin();
 		}
