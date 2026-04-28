@@ -10,13 +10,13 @@ namespace engine::data {
 
 /// TT
 template<typename T, typename = void>
-struct TypeHasTag : std::false_type {};
+struct TypeHasTags : std::false_type {};
 
 template<typename T>
-struct TypeHasTag<T, std::void_t<typename T::tags>> : std::true_type {};
+struct TypeHasTags<T, std::void_t<typename T::tags>> : std::true_type {};
 
 template<typename T>
-inline constexpr bool has_tags_v = TypeHasTag<T>::value;
+inline constexpr bool has_tags_v = TypeHasTags<T>::value;
 
 template<typename T>
 struct is_tuple : std::false_type {};
@@ -34,18 +34,23 @@ constexpr bool tuple_contains_v = []<size_t... Is>(std::index_sequence<Is...>) {
 }(std::make_index_sequence<std::tuple_size_v<Tuple>>{});
 
 template<typename tuple1, typename tuple2>
-constexpr bool tagsAreSame()
-	requires (is_tuple_v<tuple1>&& is_tuple_v<tuple2>)
-{
-	static_assert(std::tuple_size_v<tuple1> == std::tuple_size_v<tuple2>, "Tuples have different sizes");
+constexpr bool tuple_is_similar = []<size_t... Is>(std::index_sequence<Is...>) {
+	static_assert(is_tuple_v<tuple1> && is_tuple_v<tuple2>, "It isn't tuples");
+	return (tuple_contains_v<
+		std::tuple_element_t<Is, tuple1>,
+		tuple2
+	> || ...);
+}(std::make_index_sequence<std::tuple_size_v<tuple1>>{});
 
-	return[]<size_t... Is>(std::index_sequence<Is...>) {
+template<typename tuple1, typename tuple2>
+constexpr bool tags_are_same = []<size_t... Is>(std::index_sequence<Is...>) {
+		static_assert(is_tuple_v<tuple1> && is_tuple_v<tuple2>, "It isn't tuples");
+		static_assert(std::tuple_size_v<tuple1> == std::tuple_size_v<tuple2>, "Tuples have different sizes");
 		return (tuple_contains_v<
 			std::tuple_element_t<Is, tuple1>,
 			tuple2
 		> && ...);
 	}(std::make_index_sequence<std::tuple_size_v<tuple1>>{});
-}
 
 template<typename Tag, typename... Tags>
 constexpr bool hasTag() {
@@ -63,3 +68,12 @@ concept SameTags = (std::tuple_size_v<Tuple1> == std::tuple_size_v<Tuple2>) &&
 []<size_t... Is>(std::index_sequence<Is...>) {
 	return (tuple_contains_v<std::tuple_element_t<Is, Tuple1>, Tuple2> && ...);
 }(std::make_index_sequence<std::tuple_size_v<Tuple1>>{});
+
+template<typename T, typename = void>
+struct is_single_proxy : std::false_type {};
+
+template<typename T>
+struct is_single_proxy<T, std::void_t<typename T::is_single_proxy_tag>> : std::true_type {};
+
+template<typename T>
+constexpr bool is_single_proxy_v = is_single_proxy<T>::value;

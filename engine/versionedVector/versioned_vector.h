@@ -65,7 +65,7 @@ public:
 
 namespace engine::data {
 	template<typename T>
-	class VersionedVector {
+	class versionedVector {
 		std::vector<T> rawVector;
 		versions::Versioned version;
 
@@ -79,22 +79,22 @@ namespace engine::data {
 
 		operator const std::vector<T>& () const { return rawVector; }
 
-		VersionedVector() = default;
+		versionedVector() = default;
 
-		VersionedVector(size_t n)
+		versionedVector(size_t n)
 			: rawVector(n)
 		{
 			version.bumpVersion();
 		}
 
-		VersionedVector(std::initializer_list<T> init)
+		versionedVector(std::initializer_list<T> init)
 			: rawVector(init)
 		{
 			version.bumpVersion();
 		}
 
 		template<typename Container>
-		VersionedVector(Container&& container)
+		versionedVector(Container&& container)
 			: rawVector(std::forward<Container>(container))
 		{
 			version.bumpVersion();
@@ -102,47 +102,47 @@ namespace engine::data {
 
 		// Конструктор от итераторов
 		template<typename InputIt>
-		VersionedVector(InputIt first, InputIt last)
+		versionedVector(InputIt first, InputIt last)
 			: rawVector(first, last)
 		{
 			version.bumpVersion();
 		}
 
 		// Конструктор с заполнением
-		VersionedVector(size_t n, const T& val)
+		versionedVector(size_t n, const T& val)
 			: rawVector(n, val)
 		{
 			version.bumpVersion();
 		}
 
 		// Move-конструктор от std::vector
-		VersionedVector(std::vector<T>&& vec) noexcept
+		versionedVector(std::vector<T>&& vec) noexcept
 			: rawVector(std::move(vec))
 		{
 			version.bumpVersion();
 		}
 
 		// Копирование и перемещение
-		VersionedVector(const VersionedVector&) = default;
-		VersionedVector(VersionedVector&&) noexcept = default;
-		VersionedVector& operator=(const VersionedVector&) = default;
-		VersionedVector& operator=(VersionedVector&&) noexcept = default;
+		versionedVector(const versionedVector&) = default;
+		versionedVector(versionedVector&&) noexcept = default;
+		versionedVector& operator=(const versionedVector&) = default;
+		versionedVector& operator=(versionedVector&&) noexcept = default;
 
 		// Оператор присваивания от initializer_list
-		VersionedVector& operator=(std::initializer_list<T> init) {
+		versionedVector& operator=(std::initializer_list<T> init) {
 			rawVector = init;
 			version.bumpVersion();
 			return *this;
 		}
 
 		// Оператор присваивания от std::vector
-		VersionedVector& operator=(const std::vector<T>& vec) {
+		versionedVector& operator=(const std::vector<T>& vec) {
 			rawVector = vec;
 			version.bumpVersion();
 			return *this;
 		}
 
-		VersionedVector& operator=(std::vector<T>&& vec) noexcept {
+		versionedVector& operator=(std::vector<T>&& vec) noexcept {
 			rawVector = std::move(vec);
 			version.bumpVersion();
 			return *this;
@@ -269,7 +269,7 @@ namespace engine::data {
 			return rawVector;
 		}
 
-		friend std::ostream& operator<<(std::ostream& os, const VersionedVector& vector) {
+		friend std::ostream& operator<<(std::ostream& os, const versionedVector& vector) {
 			os << "--- version_vector ---\n";
 			os << vector.vec() << '\n';
 			return os;

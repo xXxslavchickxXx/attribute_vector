@@ -13,7 +13,19 @@ namespace engine::data {
         multi_proxy<IsConst, Tag> _proxy;
 
     public:
+        using is_single_proxy_tag = void;
+
         single_proxy(TupleType& data) : _proxy(data) {}
+
+        template<typename T>
+        void insert(size_t where, const T& otherSP) requires (!IsConst && is_single_proxy_v<T>) {
+            _proxy.insert(where, otherSP._proxy);
+        }
+
+        template<typename T>
+        void upload(size_t where, const T& otherSP) requires (!IsConst && is_single_proxy_v<T>) {
+            _proxy.upload(where, otherSP._proxy);
+        }
 
         // Доступ к элементу
         decltype(auto) operator[](size_t i) {

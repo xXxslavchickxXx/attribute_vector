@@ -28,6 +28,9 @@ namespace engine::data {
 		template<template<typename...> typename AnotherVec, typename... AnotherTags>
 		void insert(size_t where, const attribute_vector<AnotherVec, AnotherTags...>& vec);
 
+		void erase(size_t where);
+		void erase(size_t where, size_t count);
+
 	public:
 		template<bool Is_const, typename... SelectedTags>
 		class multi_proxy;
@@ -61,6 +64,12 @@ namespace engine::data {
 
 		void validate_sizes() const;
 	};
+
+	template<typename... Tags>
+	using default_vector = attribute_vector<std::vector, Tags...>;
+
+	template<typename... Tags>
+	using version_vector = attribute_vector<versionedVector, Tags...>;
 }
 
 #include "src/attribute_vector.inl"

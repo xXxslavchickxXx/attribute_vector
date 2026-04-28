@@ -12,22 +12,23 @@ namespace engine::data {
 		// В зависимости от значение Is_const выбираем тип прокси
 		using TupleType = std::tuple<Vec<typename Tags::type>...>;
 		using PointerType = std::conditional_t<Is_const, const TupleType*, TupleType*>;
-		using tags = std::tuple<SelectedTags...>;
 
 		PointerType _data;
 
 	public:
+		using tags = std::tuple<SelectedTags...>;
+
 		multi_proxy(TupleType& data);
 		multi_proxy(const TupleType& data);
 
 		template<typename Tag>
 		const Vec<typename Tag::type>& vector() const;
 
-		/// Методы вставки в другой контейнер
-		template<bool AnotherIs_const, typename... AnotherSelectedTags>
-		void insert(size_t where, const multi_proxy<AnotherIs_const, AnotherSelectedTags...>& proxy) requires (!Is_const);
-
 		/// Методы вставки
+		template<typename AnotherProxy>
+		void insert(size_t where, const AnotherProxy& proxy)
+			requires (!Is_const && has_tags_v<AnotherProxy>);
+
 		template<typename... Containers>
 		void insert_containers(size_t where, const Containers&... containers) requires (!Is_const);
 		void insert_list(size_t where, const std::initializer_list<typename SelectedTags::type>&... lists) requires (!Is_const);
@@ -44,6 +45,9 @@ namespace engine::data {
 		void resize(size_t new_size, const SelectedTags::type&... values) requires (!Is_const);
 
 		/// Методы аплоада даты в текущие данные
+		template<typename AnotherProxy>
+		void upload(size_t where, const AnotherProxy& proxy) requires (!Is_const && has_tags_v<AnotherProxy>);
+
 		template<typename... Containers>
 		void upload_containers(size_t where, const Containers&... containers) requires (!Is_const);
 		void upload_list(size_t where, const std::initializer_list<typename SelectedTags::type>&... lists) requires (!Is_const);
@@ -102,7 +106,7 @@ namespace engine::data {
 		// Метод для вызова шаблонных лямбд выражений
 		// Отдельно - для того что скрыть ужасный синтаксис
 		template<typename Tag, typename F>
-		void call(F&& f) {
+		constexpr void call(F&& f) {
 			f.template operator()<Tag>();
 		}
 

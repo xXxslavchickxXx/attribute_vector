@@ -6,12 +6,26 @@
 
 namespace engine::data {
 	template<template<typename...> typename Vec, typename... Tags>
+	void attribute_vector<Vec, Tags...>::
+		erase(size_t where, size_t count)
+	{
+		this->with<Tags...>().erase(where, count);
+	}
+	
+	template<template<typename...> typename Vec, typename... Tags>
+	void attribute_vector<Vec, Tags...>::
+		erase(size_t where)
+	{
+		this->erase(where, 1);
+	}
+
+	template<template<typename...> typename Vec, typename... Tags>
 	template<template<typename...> typename AnotherVec, typename... AnotherTags>
 	void attribute_vector<Vec, Tags...>::
 		insert(size_t where, const attribute_vector<AnotherVec, AnotherTags...>& vec)
 	{
-		static_assert(SameTags<std::tuple<Tags...>, std::tuple<AnotherTags...>>, 
-			"The tags of the copied attribute_vector do not match the current attribute_vector.");
+		static_assert(tuple_is_similar<std::tuple<Tags...>, std::tuple<AnotherTags...>>, 
+			"The tags of the copied attribute_vector do not contain the current attribute_vector.");
 		this->with<Tags...>().insert(where, vec.with<AnotherTags...>());
 	}
 

@@ -1,35 +1,54 @@
 #pragma once
 
 namespace engine::data {
+	template<template<typename...> typename Vec, typename... Tags>
+	template<bool Is_const, typename... SelectedTags>
+	template<typename AnotherProxy>
+	void attribute_vector<Vec, Tags...>::multi_proxy<Is_const, SelectedTags...>::
+		upload(size_t where, const AnotherProxy& proxy)
+		requires (!Is_const && has_tags_v<AnotherProxy>)
+	{
+		using InnerTags = typename AnotherProxy::tags;
+
+		auto upload_from_proxy = [&]<typename Tag>() {
+			if constexpr (tuple_contains_v<Tag, InnerTags>) {
+				this->upload_one<Tag>(where, proxy.vector<Tag>());
+			}
+		};
+
+		(this->template call<SelectedTags>(upload_from_proxy), ...);
+	}
 
 	template<template<typename...> typename Vec, typename... Tags>
 	template<bool Is_const, typename... SelectedTags>
-	template<bool AnotherIs_const, typename... AnotherSelectedTags>
+	template<typename AnotherProxy>
 	void attribute_vector<Vec, Tags...>::multi_proxy<Is_const, SelectedTags...>::
-	insert(size_t where, const multi_proxy<AnotherIs_const, AnotherSelectedTags...>& proxy) requires (!Is_const) {
+		insert(size_t where, const AnotherProxy& proxy)
+		requires (!Is_const && has_tags_v<AnotherProxy>)
+	{
+		using InnerTags = AnotherProxy::tags;
+		using CurrentTags = tags;
 
-		using CurrentTags = std::tuple<SelectedTags...>;
-		using InnerTags = std::tuple<AnotherSelectedTags...>;
-
-		static_assert(tagsAreSame<CurrentTags, InnerTags>(),
+		static_assert(tuple_is_similar<InnerTags, CurrentTags>,
 			"tags of the copied proxy do not match the current proxy");
 
-		[&]<size_t... Is>(std::index_sequence<Is...>) {
-			
-			((
-				this->insert_container<std::tuple_element_t<Is, InnerTags>>(
-					where, proxy.vector<std::tuple_element_t<Is, InnerTags>>()
-				)
-			), ...);
-
-		}(std::make_index_sequence<std::tuple_size_v<InnerTags>>{});
-
-		auto inserter = [&]<typename Tag>() {
+		auto insert_default = [&]<typename Tag>() {
 			std::vector<typename Tag::type> default_vec(proxy.size(), Tag::defaultValue());
-			insert_container<Tag>(where, default_vec);
+			this->insert_container<Tag>(where, default_vec);
 		};
 
-		execute_for_other(inserter);
+		auto insert_from_proxy = [&]<typename Tag>() {
+			if constexpr (tuple_contains_v<Tag, InnerTags>) {
+				this->insert_container<Tag>(where, proxy.vector<Tag>());
+			}
+			else {
+				call<Tag>(insert_default);
+			}
+		};
+
+		((call<SelectedTags>(insert_from_proxy)), ...);
+
+		execute_for_other(insert_default);
 	}
 
 	template<template<typename...> typename Vec, typename... Tags>
@@ -278,7 +297,9 @@ namespace engine::data {
 	template<template<typename...> typename Vec, typename... Tags>
 	template<bool Is_const, typename... SelectedTags>
 	template<typename Tag>
-	const Vec<typename Tag::type>& attribute_vector<Vec, Tags...>::multi_proxy<Is_const, SelectedTags...>::vector() const {
+	const Vec<typename Tag::type>& attribute_vector<Vec, Tags...>::multi_proxy<Is_const, SelectedTags...>::
+		vector() const
+	{
 		static_assert(hasTag<Tag, SelectedTags...>(),
 			"This tag doesn't belong to this collection");
 		return std::get<getTagIndex<Tag>()>(*_data);
