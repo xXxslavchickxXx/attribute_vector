@@ -130,6 +130,9 @@
   <ItemGroup>
     <ClCompile Include="attribute vector.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="engine\test_tags\tags.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
