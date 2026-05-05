@@ -1,0 +1,3 @@
+"C:\Users\kornello\source\repos\xXxslavchickxXx\AetherRefactoring\submodules\attribute_vector\engine"
+
+the copy path: "C:\Users\kornello\source\repos\xXxslavchickxXx\AetherRefactoring\проверка приколов с шейдерами\engine\attribute_vector"

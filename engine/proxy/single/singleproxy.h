@@ -17,6 +17,13 @@ namespace engine::data {
 
         single_proxy(TupleType& data) : _proxy(data) {}
 
+        auto begin() {
+            return _proxy.template mutable_vector<Tag>().begin();
+        }
+        auto end() {
+            return _proxy.template mutable_vector<Tag>().end();
+        }
+
         template<typename T>
         void insert(size_t where, const T& otherSP) requires (!IsConst && is_single_proxy_v<T>) {
             _proxy.insert(where, otherSP._proxy);
