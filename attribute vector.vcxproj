@@ -143,11 +143,8 @@
   <ItemGroup>
     <None Include=".gitattributes" />
     <None Include=".gitignore" />
-    <None Include="attribute vector.slnx" />
-    <None Include="CppProperties.json" />
     <None Include="engine\attribute_vector\src\attribute_vector.inl" />
     <None Include="engine\proxy\multi\src\multiproxy.inl" />
-    <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

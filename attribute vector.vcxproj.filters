@@ -48,14 +48,11 @@
   <ItemGroup>
     <None Include=".gitattributes" />
     <None Include=".gitignore" />
-    <None Include="attribute vector.slnx" />
-    <None Include="CppProperties.json" />
     <None Include="engine\attribute_vector\src\attribute_vector.inl">
       <Filter>Файлы заголовков</Filter>
     </None>
     <None Include="engine\proxy\multi\src\multiproxy.inl">
       <Filter>Файлы заголовков</Filter>
     </None>
-    <None Include="README.md" />
   </ItemGroup>
 </Project>
