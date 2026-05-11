@@ -35,3 +35,4 @@ build/
 /attribute vector.slnx
 /CppProperties.json
 .attribute vector.vcxproj
+/attribute vector.cpp
