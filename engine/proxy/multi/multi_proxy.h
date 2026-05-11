@@ -3,7 +3,7 @@
 #include <tuple>
 #include <type_traits>
 
-#include "../../attribute_vector/attribute_vector.h"
+#include <attribute_vector/attribute_vector.h>
 
 namespace engine::data {
 	template<template<typename...> typename Vec, typename... Tags>

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../attribute_vector/attribute_vector.h"
+#include <attribute_vector/attribute_vector.h>
 
 namespace engine::data {
 

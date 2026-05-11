@@ -8,13 +8,12 @@ project(attribute_vector VERSION 1.0 LANGUAGES CXX)
 # Опция: собирать тесты или нет?
 option(BUILD_TESTS "Build tests" OFF)
 
-# 1. СОЗДАЁМ INTERFACE-БИБЛИОТЕКУ (header-only)
+# 1. Создаем либу
 add_library(attribute_vector INTERFACE)
 
 # 2. Добавляем пути к заголовкам
 target_include_directories(attribute_vector INTERFACE
     ${CMAKE_CURRENT_SOURCE_DIR}/engine
-    # Если нужно явно указать подпапки (не обязательно, но для порядка)
     ${CMAKE_CURRENT_SOURCE_DIR}/engine/proxy/multi
     ${CMAKE_CURRENT_SOURCE_DIR}/engine/proxy/single
     ${CMAKE_CURRENT_SOURCE_DIR}/engine/tags
