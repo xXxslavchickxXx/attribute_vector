@@ -8,9 +8,9 @@ Win32/
 CppProperties.json
 
 # VS files with spaces
-/attribute vector.vcxproj
-/attribute vector.vcxproj.filters
-/attribute vector.vcxproj.user
+/attribute*vector.vcxproj
+/attribute?vector.vcxproj.filters
+/attribute\ vector.vcxproj.user
 
 # Build folders
 build/
@@ -32,3 +32,5 @@ build/
 *.user
 *.suo
 *.sln.docstates
+/attribute vector.slnx
+/CppProperties.json
