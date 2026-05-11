@@ -6,9 +6,9 @@ x64/
 Win32/
 
 # VS files with spaces
-attribute\ vector.vcxproj
-attribute\ vector.vcxproj.filters
-attribute\ vector.vcxproj.user
+attribute vector.vcxproj
+attribute vector.vcxproj.filters
+attribute vector.vcxproj.user
 
 # Build folders
 build/
