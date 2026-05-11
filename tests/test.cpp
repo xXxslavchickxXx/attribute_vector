@@ -3,6 +3,7 @@
 #include <cassert>
 #include <sstream>
 #include <string>
+#include <deque>
 
 #include "attribute_vector/attribute_vector.h"
 #include "tags/tags.h"
@@ -927,6 +928,8 @@ int main() {
     std::cout << "\n═══════════════════════════════════════\n";
     std::cout << "  ALL TESTS PASSED! ✅\n";
     std::cout << "═══════════════════════════════════════\n";
+
+    attribute_vector<std::deque, Position> dq;
 
     return 0;
 }
