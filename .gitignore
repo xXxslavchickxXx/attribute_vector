@@ -19,7 +19,7 @@ CMakeFiles/
 cmake_install.cmake
 
 # Compiled
-*.exe
+*.exe 
 *.dll
 *.lib
 *.obj
