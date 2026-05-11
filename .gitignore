@@ -8,17 +8,17 @@ Win32/
 CppProperties.json
 
 # VS files with spaces
-attribute*vector.vcxproj
-attribute*vector.vcxproj.filters
-attribute?vector.vcxproj.user
+/attribute vector.vcxproj
+/attribute vector.vcxproj.filters
+/attribute vector.vcxproj.user
 
 # Build folders
 build/
 */build/
 
 # CMake files
-CMakeFiles/
-cmake_install.cmake
+/CMakeFiles/
+/cmake_install.cmake
 
 # Compiled
 *.exe 
