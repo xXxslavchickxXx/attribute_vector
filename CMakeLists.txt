@@ -6,20 +6,20 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 project(attribute_vector VERSION 1.0 LANGUAGES CXX)
 
 # Опция: собирать тесты или нет?
-option(BUILD_TESTS "Build tests" OFF)
+option(BUILD_TESTS "Build tests" ON)
 
 # 1. Создаем либу
 add_library(attribute_vector INTERFACE)
 
 # 2. Добавляем пути к заголовкам
 target_include_directories(attribute_vector INTERFACE
-    ${CMAKE_CURRENT_SOURCE_DIR}/engine
-    ${CMAKE_CURRENT_SOURCE_DIR}/engine/proxy/multi
-    ${CMAKE_CURRENT_SOURCE_DIR}/engine/proxy/single
-    ${CMAKE_CURRENT_SOURCE_DIR}/engine/tags
-    ${CMAKE_CURRENT_SOURCE_DIR}/engine/io
-    ${CMAKE_CURRENT_SOURCE_DIR}/engine/type_traits
-    ${CMAKE_CURRENT_SOURCE_DIR}/engine/versionedVector
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/proxy/multi
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/proxy/single
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/tags
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/io
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/type_traits
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/versionedVector
 )
 
 # 3. Зависимости
