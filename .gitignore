@@ -5,6 +5,8 @@ Release/
 x64/
 Win32/
 
+CppProperties.json
+
 # VS files with spaces
 attribute*vector.vcxproj
 attribute*vector.vcxproj.filters
