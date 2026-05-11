@@ -34,3 +34,4 @@ build/
 *.sln.docstates
 /attribute vector.slnx
 /CppProperties.json
+.attribute vector.vcxproj
