@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 project(attribute_vector VERSION 1.0 LANGUAGES CXX)
 
 # Опция: собирать тесты или нет?
-option(BUILD_TESTS "Build tests" ON)
+option(BUILD_TESTS "Build tests" OFF)
 
 # 1. Создаем либу
 add_library(attribute_vector INTERFACE)
