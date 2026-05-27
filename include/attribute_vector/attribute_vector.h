@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../versionedVector/versioned_vector.h"
-#include "../io/io.h"
 #include "../type_traits/type_traits.h"
 
 template<template<typename...> typename Vec, typename... Tags>
