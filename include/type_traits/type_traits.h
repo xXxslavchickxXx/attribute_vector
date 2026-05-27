@@ -34,10 +34,7 @@ constexpr bool tuple_contains_v = []<size_t... Is>(std::index_sequence<Is...>) {
 template<typename tuple1, typename tuple2>
 constexpr bool tuple_is_similar = []<size_t... Is>(std::index_sequence<Is...>) {
 	static_assert(is_tuple_v<tuple1> && is_tuple_v<tuple2>, "It isn't tuples");
-	return (tuple_contains_v<
-		std::tuple_element_t<Is, tuple1>,
-		tuple2
-	> || ...);
+	return (tuple_contains_v<std::tuple_element_t<Is, tuple1>, tuple2> || ...);
 }(std::make_index_sequence<std::tuple_size_v<tuple1>>{});
 
 template<typename tuple1, typename tuple2>
