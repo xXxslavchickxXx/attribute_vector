@@ -3,10 +3,8 @@
 #include <tuple>
 
 /// FWD
-namespace engine::data {
-	template<template<typename...> typename Vec, typename... Tags>
-	class attribute_vector;
-}
+template<template<typename...> typename Vec, typename... Tags>
+class attribute_vector;
 
 /// TT
 template<typename T, typename = void>
@@ -61,7 +59,7 @@ template<typename T>
 struct is_attribute_vector : std::false_type {};
 
 template<template<typename...> typename Vec, typename... Args>
-struct is_attribute_vector<engine::data::attribute_vector<Vec, Args...>> : std::true_type {};
+struct is_attribute_vector<attribute_vector<Vec, Args...>> : std::true_type {};
 
 template<typename Tuple1, typename Tuple2>
 concept SameTags = (std::tuple_size_v<Tuple1> == std::tuple_size_v<Tuple2>) &&

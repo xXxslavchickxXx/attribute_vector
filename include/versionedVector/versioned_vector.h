@@ -16,13 +16,13 @@ namespace versions {
 	};
 }
 
-template<typename T>
+template<typename T, typename F>
 class Field {
-	std::function<void()> _func;
+	F _func;
 	T& _value;
 
 public:
-	Field(std::function<void()> func, T& value) : _func(std::move(func)), _value(value) {}
+	Field(F&& func, T& value) : _func(std::forward<F>(func)), _value(value) {}
 
 	Field& operator=(const T& new_val) {
 		this->_value = new_val;

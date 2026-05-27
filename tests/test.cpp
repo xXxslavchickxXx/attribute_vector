@@ -8,9 +8,6 @@
 #include <attribute_vector/attribute_vector.h>
 #include <tags/tags.h>
 
-using namespace engine;
-using namespace engine::data;
-
 // ============================================================
 // Вспомогательные функции для тестов
 // ============================================================
