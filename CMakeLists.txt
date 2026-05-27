@@ -104,7 +104,8 @@ set("${CMAKE_PROJECT_NAME}_LIB_H"   "")
 set("${CMAKE_PROJECT_NAME}_LIB_CPP" "")
 
 # 3. Внешние либы для линковки к твоей основной библиотеке (например: gpuBuffers)
-set("${CMAKE_PROJECT_NAME}_LIBS" "")
+find_package(glm)
+set("${CMAKE_PROJECT_NAME}_LIBS" glm::glm)
 
 # 4. Либы, нужные ТОЛЬКО для запуска приложения-примера (например: shaderLib)
 set("${CMAKE_PROJECT_NAME}_EXAMPLE_LIBS" "")

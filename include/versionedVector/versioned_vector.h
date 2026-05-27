@@ -63,224 +63,222 @@ public:
 	}
 };
 
-namespace engine::data {
-	template<typename T>
-	class versionedVector {
-		std::vector<T> rawVector;
-		versions::Versioned version;
+template<typename T>
+class versionedVector {
+	std::vector<T> rawVector;
+	versions::Versioned version;
 
-	public:
-		auto operator[](size_t i) {
-			return Field<T>([this]() { version.bumpVersion(); }, rawVector[i]);
-		}
-		const T& operator[](size_t i) const {
-			return rawVector[i];
-		}
+public:
+	auto operator[](size_t i) {
+		return Field<T>([this]() { version.bumpVersion(); }, rawVector[i]);
+	}
+	const T& operator[](size_t i) const {
+		return rawVector[i];
+	}
 
-		operator const std::vector<T>& () const { return rawVector; }
+	operator const std::vector<T>& () const { return rawVector; }
 
-		versionedVector() = default;
+	versionedVector() = default;
 
-		versionedVector(size_t n)
-			: rawVector(n)
-		{
-			version.bumpVersion();
-		}
+	versionedVector(size_t n)
+		: rawVector(n)
+	{
+		version.bumpVersion();
+	}
 
-		versionedVector(std::initializer_list<T> init)
-			: rawVector(init)
-		{
-			version.bumpVersion();
-		}
+	versionedVector(std::initializer_list<T> init)
+		: rawVector(init)
+	{
+		version.bumpVersion();
+	}
 
-		template<typename Container>
-		versionedVector(Container&& container)
-			: rawVector(std::forward<Container>(container))
-		{
-			version.bumpVersion();
-		}
+	template<typename Container>
+	versionedVector(Container&& container)
+		: rawVector(std::forward<Container>(container))
+	{
+		version.bumpVersion();
+	}
 
-		// Конструктор от итераторов
-		template<typename InputIt>
-		versionedVector(InputIt first, InputIt last)
-			: rawVector(first, last)
-		{
-			version.bumpVersion();
-		}
+	// Конструктор от итераторов
+	template<typename InputIt>
+	versionedVector(InputIt first, InputIt last)
+		: rawVector(first, last)
+	{
+		version.bumpVersion();
+	}
 
-		// Конструктор с заполнением
-		versionedVector(size_t n, const T& val)
-			: rawVector(n, val)
-		{
-			version.bumpVersion();
-		}
+	// Конструктор с заполнением
+	versionedVector(size_t n, const T& val)
+		: rawVector(n, val)
+	{
+		version.bumpVersion();
+	}
 
-		// Move-конструктор от std::vector
-		versionedVector(std::vector<T>&& vec) noexcept
-			: rawVector(std::move(vec))
-		{
-			version.bumpVersion();
-		}
+	// Move-конструктор от std::vector
+	versionedVector(std::vector<T>&& vec) noexcept
+		: rawVector(std::move(vec))
+	{
+		version.bumpVersion();
+	}
 
-		// Копирование и перемещение
-		versionedVector(const versionedVector&) = default;
-		versionedVector(versionedVector&&) noexcept = default;
-		versionedVector& operator=(const versionedVector&) = default;
-		versionedVector& operator=(versionedVector&&) noexcept = default;
+	// Копирование и перемещение
+	versionedVector(const versionedVector&) = default;
+	versionedVector(versionedVector&&) noexcept = default;
+	versionedVector& operator=(const versionedVector&) = default;
+	versionedVector& operator=(versionedVector&&) noexcept = default;
 
-		// Оператор присваивания от initializer_list
-		versionedVector& operator=(std::initializer_list<T> init) {
-			rawVector = init;
-			version.bumpVersion();
-			return *this;
-		}
+	// Оператор присваивания от initializer_list
+	versionedVector& operator=(std::initializer_list<T> init) {
+		rawVector = init;
+		version.bumpVersion();
+		return *this;
+	}
 
-		// Оператор присваивания от std::vector
-		versionedVector& operator=(const std::vector<T>& vec) {
-			rawVector = vec;
-			version.bumpVersion();
-			return *this;
-		}
+	// Оператор присваивания от std::vector
+	versionedVector& operator=(const std::vector<T>& vec) {
+		rawVector = vec;
+		version.bumpVersion();
+		return *this;
+	}
 
-		versionedVector& operator=(std::vector<T>&& vec) noexcept {
-			rawVector = std::move(vec);
-			version.bumpVersion();
-			return *this;
-		}
+	versionedVector& operator=(std::vector<T>&& vec) noexcept {
+		rawVector = std::move(vec);
+		version.bumpVersion();
+		return *this;
+	}
 
-		using iterator = std::vector<T>::iterator;
+	using iterator = std::vector<T>::iterator;
 
-		iterator begin() {
-			return rawVector.begin();
-		}
+	iterator begin() {
+		return rawVector.begin();
+	}
 
-		iterator end() {
-			return rawVector.end();
-		}
+	iterator end() {
+		return rawVector.end();
+	}
 
-		using const_iterator = std::vector<T>::const_iterator;
+	using const_iterator = std::vector<T>::const_iterator;
 
-		const_iterator begin() const {
-			return rawVector.begin();
-		}
+	const_iterator begin() const {
+		return rawVector.begin();
+	}
 
-		const_iterator end() const {
-			return rawVector.end();
-		}
+	const_iterator end() const {
+		return rawVector.end();
+	}
 
-		const_iterator cbegin() const {
-			return rawVector.cbegin();
-		}
+	const_iterator cbegin() const {
+		return rawVector.cbegin();
+	}
 
-		const_iterator cend() const {
-			return rawVector.cend();
-		}
+	const_iterator cend() const {
+		return rawVector.cend();
+	}
 
-		T& front() {
-			return rawVector.front();
-		}
+	T& front() {
+		return rawVector.front();
+	}
 
-		const T& front() const {
-			return rawVector.front();
-		}
+	const T& front() const {
+		return rawVector.front();
+	}
 
-		T& back() {
-			return rawVector.back();
-		}
+	T& back() {
+		return rawVector.back();
+	}
 
-		const T& back() const {
-			return rawVector.back();
-		}
+	const T& back() const {
+		return rawVector.back();
+	}
 
-		auto& data() {
-			return rawVector.data();
-		}
-		const auto& data() const {
-			return rawVector.data();
-		}
+	auto& data() {
+		return rawVector.data();
+	}
+	const auto& data() const {
+		return rawVector.data();
+	}
 
-		// методы этого класса
-		size_t getVersion() const {
-			return version.getVersion();
-		}
+	// методы этого класса
+	size_t getVersion() const {
+		return version.getVersion();
+	}
 
-		size_t capacity() const {
-			return rawVector.capacity();
-		}
+	size_t capacity() const {
+		return rawVector.capacity();
+	}
 
-		bool empty() const {
-			return rawVector.empty();
-		}
+	bool empty() const {
+		return rawVector.empty();
+	}
 
-		// ерейзы
-		void erase(const_iterator where) {
-			rawVector.erase(where);
-		}
-		void erase(const_iterator first, const_iterator last) {
-			rawVector.erase(first, last);
-		}
+	// ерейзы
+	void erase(const_iterator where) {
+		rawVector.erase(where);
+	}
+	void erase(const_iterator first, const_iterator last) {
+		rawVector.erase(first, last);
+	}
 
-		// ресайзы
-		void resize(size_t newSize) {
-			rawVector.resize(newSize);
-			version.bumpVersion();
-		}
-		void resize(size_t newSize, const T& val) {
-			rawVector.resize(newSize, val);
-			version.bumpVersion();
-		}
+	// ресайзы
+	void resize(size_t newSize) {
+		rawVector.resize(newSize);
+		version.bumpVersion();
+	}
+	void resize(size_t newSize, const T& val) {
+		rawVector.resize(newSize, val);
+		version.bumpVersion();
+	}
 
-		// резервы
-		void reserve(size_t newCapacity) {
-			rawVector.reserve(newCapacity);
-			version.bumpVersion();
-		}
+	// резервы
+	void reserve(size_t newCapacity) {
+		rawVector.reserve(newCapacity);
+		version.bumpVersion();
+	}
 
-		// Инсерты
-		void insert(const_iterator where, const T& val) {
-			rawVector.insert(where, val);
-			version.bumpVersion();
-		}
-		void insert(const_iterator where, const size_t count, const T& val) {
-			rawVector.insert(where, count, val);
-			version.bumpVersion();
-		}
-		void insert(const_iterator where, std::initializer_list<T> list) {
-			rawVector.insert(where, list);
-			version.bumpVersion();
-		}
-		template<typename Iter>
-		void insert(const_iterator where, Iter first, Iter last) {
-			rawVector.insert(where, first, last);
-			version.bumpVersion();
-		}
+	// Инсерты
+	void insert(const_iterator where, const T& val) {
+		rawVector.insert(where, val);
+		version.bumpVersion();
+	}
+	void insert(const_iterator where, const size_t count, const T& val) {
+		rawVector.insert(where, count, val);
+		version.bumpVersion();
+	}
+	void insert(const_iterator where, std::initializer_list<T> list) {
+		rawVector.insert(where, list);
+		version.bumpVersion();
+	}
+	template<typename Iter>
+	void insert(const_iterator where, Iter first, Iter last) {
+		rawVector.insert(where, first, last);
+		version.bumpVersion();
+	}
 
-		void push_back(const T& val) {
-			rawVector.push_back(val);
-			version.bumpVersion();
-		}
-		void pop_back() {
-			rawVector.pop_back();
-			version.bumpVersion();
-		}
+	void push_back(const T& val) {
+		rawVector.push_back(val);
+		version.bumpVersion();
+	}
+	void pop_back() {
+		rawVector.pop_back();
+		version.bumpVersion();
+	}
 
-		void clear() {
-			rawVector.clear();
-			version.bumpVersion();
-		}
+	void clear() {
+		rawVector.clear();
+		version.bumpVersion();
+	}
 
-		size_t size() const {
-			return rawVector.size();
-		}
+	size_t size() const {
+		return rawVector.size();
+	}
 
-		auto& vec() const {
-			return rawVector;
-		}
+	auto& vec() const {
+		return rawVector;
+	}
 
-		friend std::ostream& operator<<(std::ostream& os, const versionedVector& vector) {
-			os << "--- version_vector ---\n";
-			os << vector.vec() << '\n';
-			return os;
-		}
-	};
-}
+	friend std::ostream& operator<<(std::ostream& os, const versionedVector& vector) {
+		os << "--- version_vector ---\n";
+		os << vector.vec() << '\n';
+		return os;
+	}
+};
