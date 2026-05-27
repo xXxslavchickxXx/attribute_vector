@@ -67,7 +67,4 @@ private:
 template<typename... Tags>
 using default_vector = attribute_vector<std::vector, Tags...>;
 
-template<typename... Tags>
-using version_vector = attribute_vector<versionedVector, Tags...>;
-
 #include "src/attribute_vector.inl"

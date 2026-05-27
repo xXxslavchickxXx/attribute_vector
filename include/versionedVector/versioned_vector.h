@@ -2,7 +2,6 @@
 
 #include <vector>
 #include <iostream>
-#include <io/io.h>
 
 namespace versions {
 	class Versioned {
@@ -283,3 +282,9 @@ public:
 		return os;
 	}
 };
+
+template<template<typename...> typename Vec, typename... Tags>
+class attribute_vector;
+
+template<typename... Tags>
+using version_vector = attribute_vector<versionedVector, Tags...>;

@@ -101,7 +101,7 @@ void attribute_vector<Vec, Tags...>::multi_proxy<Is_const, SelectedTags...>::
 	(insert_container<SelectedTags>(where, containers), ...);
 
 	auto inserter = [&]<typename Tag>() {
-		std::vector<typename Tag::type> default_vec(max_size, Tag::defaultValue());
+		Vec<typename Tag::type> default_vec(max_size, Tag::defaultValue());
 		insert_container<Tag>(where, default_vec);
 	};
 
