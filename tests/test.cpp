@@ -6,7 +6,9 @@
 #include <deque>
 
 #include <attribute_vector/attribute_vector.h>
-#include <tags/tags.h>
+#include <test_tags/tags.h>
+
+using namespace test;
 
 // ============================================================
 // Вспомогательные функции для тестов

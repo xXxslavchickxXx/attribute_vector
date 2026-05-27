@@ -70,7 +70,8 @@ class versionedVector {
 
 public:
 	auto operator[](size_t i) {
-		return Field<T>([this]() { version.bumpVersion(); }, rawVector[i]);
+		auto bump = [this]() { version.bumpVersion(); };
+		return Field<T, decltype(bump)>(std::move(bump), rawVector[i]);
 	}
 	const T& operator[](size_t i) const {
 		return rawVector[i];

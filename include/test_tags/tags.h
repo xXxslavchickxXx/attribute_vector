@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 
-namespace av {
+namespace test {
 	struct Position {
 		using type = glm::vec3;
 

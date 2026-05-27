@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # НАЗВАНИЕ ПРОЕКТА
-project(TemplateProject VERSION 1.0 LANGUAGES CXX)
+project(attribute_vector VERSION 1.0 LANGUAGES CXX)
 
 # ==============================================================================
 # ОПРЕДЕЛЕНИЕ ФУНКЦИЙ (менеджер зависимостей с проверкой обновлений)
@@ -97,7 +97,7 @@ file(GLOB_RECURSE ${CMAKE_PROJECT_NAME}_FILES
 )
 
 # 1. Путь к файлу-точке входа для приложения-примера (например: main.cpp)
-set("${CMAKE_PROJECT_NAME}_EXAMPLE_FILEPATH" example.cpp)
+set("${CMAKE_PROJECT_NAME}_EXAMPLE_FILEPATH" tests/test.cpp)
 
 # 2. Ручное указание файлов твоей библиотеки (если хочешь перечислить конкретные файлы)
 set("${CMAKE_PROJECT_NAME}_LIB_H"   "")
