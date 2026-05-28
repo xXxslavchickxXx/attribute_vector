@@ -4,6 +4,9 @@
 #include "../type_traits/type_traits.h"
 #include <proxy/base/base.h>
 
+template<IsAttributeVector AttributeVectorT, bool IsConst, typename Tag>
+class single_proxy;
+
 template<template<typename...> typename Vec, typename... Tags>
 class attribute_vector {
 	std::tuple<Vec<typename Tags::type>...> _data;
@@ -22,10 +25,10 @@ public:
 	const auto with() const;
 
 	template<typename Tag>
-	auto attribute();
+	single_proxy<self, false, Tag> attribute();
 
 	template<typename Tag>
-	auto attribute() const;
+	single_proxy<self, true, Tag> attribute() const;
 
 	size_t size() const;
 	size_t capacity() const;
@@ -39,9 +42,6 @@ public:
 	void erase(size_t where, size_t count);
 
 public:
-	template<bool IsConst, typename Tag>
-	class single_proxy;
-
 	using data_type = std::tuple<Vec<typename Tags::type>...>;
 	using tags = std::tuple<Tags...>;
 	template<typename T>

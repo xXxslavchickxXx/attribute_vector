@@ -4,20 +4,21 @@
 
 template<IsAttributeVector AttributeVectorT, bool IsConst, typename... SelectedTags>
 class multi_proxy : public base_proxy<AttributeVectorT, IsConst, SelectedTags...> {
+protected:
 	using Base = base_proxy<AttributeVectorT, IsConst, SelectedTags...>;
 
-// Открываем допступ к родительским методам и полям
+	// Открываем допступ к родительским методам и полям
 	template<typename Tag>
 	using vec_type = typename Base::template vec_type<Tag>;
 	using Base::data_;
 	using Base::call;
+	using Base::mutable_vector;
 
-	friend class single_proxy;
 public:
+	using Base::Base;
 	using Base::tags;
 	using Base::owner_tags;
 	using Base::vector;
-	using Base::mutable_vector;
 
 	/// Методы вставки
 	template<typename AnotherProxy>

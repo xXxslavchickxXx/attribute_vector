@@ -1,5 +1,8 @@
 #pragma once
 
+#define attribute_template template<template<typename...> typename Vec, typename... Tags>
+#define attribute_type typename attribute_vector<Vec, Tags...>
+
 #include <tuple>
 #include "../../proxy/multi/multi_proxy.h"
 #include "../../proxy/single/singleproxy.h"
@@ -30,14 +33,14 @@ void attribute_vector<Vec, Tags...>::
 
 template<template<typename...> typename Vec, typename... Tags>
 template<typename Tag>
-auto attribute_vector<Vec, Tags...>::attribute() {
-	return single_proxy<false, Tag>(_data);
+single_proxy<attribute_type::self, false, Tag> attribute_vector<Vec, Tags...>::attribute() {
+	return single_proxy<self, false, Tag>(_data);
 }
 
 template<template<typename...> typename Vec, typename... Tags>
 template<typename Tag>
-auto attribute_vector<Vec, Tags...>::attribute() const {
-	return single_proxy<true, Tag>(_data);
+single_proxy<attribute_type::self, true, Tag> attribute_vector<Vec, Tags...>::attribute() const {
+	return single_proxy<self, true, Tag>(_data);
 }
 
 template<template<typename...> typename Vec, typename... Tags>
