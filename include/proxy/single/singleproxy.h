@@ -38,7 +38,7 @@ public:
     }
 
     // Доступ к элементу
-    auto operator[](size_t i) {
+    decltype(auto) operator[](size_t i) {
         return this->mutable_vector<Tag>()[i];
     }
     const auto& operator[](size_t i) const {
