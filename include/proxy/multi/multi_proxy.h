@@ -52,6 +52,16 @@ public:
 	/// Классические методы для работы с концом векторов
 	void push_back(const SelectedTags::type&... value) requires (!IsConst);
 	void pop_back() requires (!IsConst);
+	
+	template<typename Tag>
+	auto attribute();
+	template<typename Tag>
+	auto attribute() const;
+
+	template<typename... Tags>
+	auto slice(size_t begin, size_t end);
+	template<typename... Tags>
+	auto slice(size_t begin, size_t end) const;
 
 private:
 	template<typename F>

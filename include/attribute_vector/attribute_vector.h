@@ -22,13 +22,17 @@ public:
 	template<typename... SelectedTags>
 	auto with();
 	template<typename... SelectedTags>
-	const auto with() const;
+	auto with() const;
 
 	template<typename Tag>
-	single_proxy<self, false, Tag> attribute();
-
+	auto attribute();
 	template<typename Tag>
-	single_proxy<self, true, Tag> attribute() const;
+	auto attribute() const;
+
+	template<typename... SelectedTags>
+	auto slice(size_t begin, size_t end);
+	template<typename... SelectedTags>
+	auto slice(size_t begin, size_t end) const;
 
 	size_t size() const;
 	size_t capacity() const;

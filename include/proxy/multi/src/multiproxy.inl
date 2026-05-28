@@ -1,7 +1,36 @@
 #pragma once
 
+#include <proxy/single/singleproxy.h>
+#include <proxy/slice/slice.h>
+
 #define multi_proxy_template template<IsAttributeVector AttributeVectorT, bool IsConst, typename... SelectedTags>
 #define multi_proxy_type multi_proxy<AttributeVectorT, IsConst, SelectedTags...>
+
+multi_proxy_template
+template<typename... Tags>
+auto multi_proxy_type::slice(size_t begin, size_t end) {
+	static_assert((hasTag<Tags, SelectedTags...>() && ...),
+	"this slice requests tags that do not exist in this proxy.");
+	return slice_proxy<AttributeVectorT, false, Tags...>(&data_, begin, end);
+}
+multi_proxy_template
+template<typename... Tags>
+auto multi_proxy_type::slice(size_t begin, size_t end) const {
+	static_assert((hasTag<Tags, SelectedTags...>() && ...),
+		"this slice requests tags that do not exist in this proxy.");
+	return slice_proxy<AttributeVectorT, true, Tags...>(&data_, begin, end);
+}
+
+multi_proxy_template
+template<typename Tag>
+auto multi_proxy_type::attribute() {
+	return single_proxy<AttributeVectorT, false, Tag>(data_);
+}
+multi_proxy_template
+template<typename Tag>
+auto multi_proxy_type::attribute() const {
+	return single_proxy<AttributeVectorT, true, Tag>(data_);
+}
 
 multi_proxy_template
 template<typename AnotherProxy>

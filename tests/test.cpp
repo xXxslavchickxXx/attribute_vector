@@ -29,6 +29,181 @@ using namespace test;
 // Тесты
 // ============================================================
 
+void test_slice_basic() {
+    std::cout << "\n========== test_slice_basic ==========\n";
+
+    default_vector<Position, Color> vec(
+        { glm::vec3(0,0,0), glm::vec3(1,1,1), glm::vec3(2,2,2), glm::vec3(3,3,3), glm::vec3(4,4,4) },
+        { glm::vec4(1,0,0,1), glm::vec4(0,1,0,1), glm::vec4(0,0,1,1), glm::vec4(1,1,0,1), glm::vec4(1,0,1,1) }
+    );
+
+    auto s = vec.slice<Position, Color>(1, 4);
+
+    ASSERT(s.size() == 3);
+    ASSERT(s.offset() == 1);
+
+    // Проверяем доступ к элементам
+    ASSERT(s.vector<Position>()[0] == glm::vec3(1, 1, 1));
+    ASSERT(s.vector<Position>()[1] == glm::vec3(2, 2, 2));
+    ASSERT(s.vector<Position>()[2] == glm::vec3(3, 3, 3));
+
+    ASSERT(s.vector<Color>()[0] == glm::vec4(0, 1, 0, 1));
+    ASSERT(s.vector<Color>()[1] == glm::vec4(0, 0, 1, 1));
+    ASSERT(s.vector<Color>()[2] == glm::vec4(1, 1, 0, 1));
+
+    std::cout << "✅ Basic slice operations\n";
+}
+
+void test_slice_modify() {
+    std::cout << "\n========== test_slice_modify ==========\n";
+
+    default_vector<Position, Color> vec(
+        { glm::vec3(0,0,0), glm::vec3(1,1,1), glm::vec3(2,2,2), glm::vec3(3,3,3) },
+        { glm::vec4(1,0,0,1), glm::vec4(0,1,0,1), glm::vec4(0,0,1,1), glm::vec4(1,1,0,1) }
+    );
+
+    auto s = vec.slice<Position, Color>(1, 3);
+
+    // Проверяем, что оригинальный вектор изменился
+    ASSERT(vec.with<Position>().vector<Position>()[1] == glm::vec3(10, 10, 10));
+    ASSERT(vec.with<Position>().vector<Position>()[2] == glm::vec3(20, 20, 20));
+    ASSERT(vec.with<Color>().vector<Color>()[1] == glm::vec4(0, 0, 0, 1));
+
+    // Не должно было затронуть другие элементы
+    ASSERT(vec.with<Position>().vector<Position>()[0] == glm::vec3(0, 0, 0));
+    ASSERT(vec.with<Position>().vector<Position>()[3] == glm::vec3(3, 3, 3));
+
+    std::cout << "✅ Slice modification affects original\n";
+}
+
+void test_slice_data_pointer() {
+    std::cout << "\n========== test_slice_data_pointer ==========\n";
+
+    default_vector<Position, Color> vec(
+        { glm::vec3(0,0,0), glm::vec3(1,1,1), glm::vec3(2,2,2), glm::vec3(3,3,3) },
+        { glm::vec4(1,0,0,1), glm::vec4(0,1,0,1), glm::vec4(0,0,1,1), glm::vec4(1,1,0,1) }
+    );
+
+    auto s = vec.slice<Position>(1, 3);
+
+    const glm::vec3* ptr = s.data<Position>();
+    ASSERT(ptr != nullptr);
+    ASSERT(ptr[0] == glm::vec3(1, 1, 1));
+    ASSERT(ptr[1] == glm::vec3(2, 2, 2));
+
+    // Проверяем, что указатель указывает на правильное место в памяти
+    const glm::vec3* original_data = vec.with<Position>().vector<Position>().data();
+    ASSERT(ptr == original_data + 1);
+
+    std::cout << "✅ Slice data() pointer works correctly\n";
+}
+
+void test_slice_nested() {
+    std::cout << "\n========== test_slice_nested ==========\n";
+
+    default_vector<Position, Color> vec(
+        { glm::vec3(0,0,0), glm::vec3(1,1,1), glm::vec3(2,2,2), glm::vec3(3,3,3), glm::vec3(4,4,4) },
+        { glm::vec4(1,0,0,1), glm::vec4(0,1,0,1), glm::vec4(0,0,1,1), glm::vec4(1,1,0,1), glm::vec4(1,0,1,1) }
+    );
+
+    // Берём слайс [1, 4) → элементы 1,2,3
+    auto s1 = vec.slice<Position, Color>(1, 4);
+    ASSERT(s1.size() == 3);
+    ASSERT(s1.vector<Position>()[0] == glm::vec3(1, 1, 1));
+
+    // Делаем под-слайс [1, 3) внутри → элементы 2,3
+    auto s2 = s1.slice(1, 3);
+    ASSERT(s2.size() == 2);
+    ASSERT(s2.offset() == 2);  // глобальный индекс 2
+    ASSERT(s2.vector<Position>()[0] == glm::vec3(2, 2, 2));
+    ASSERT(s2.vector<Position>()[1] == glm::vec3(3, 3, 3));
+
+    std::cout << "✅ Nested slice works correctly\n";
+}
+
+void test_slice_as_proxy() {
+    std::cout << "\n========== test_slice_as_proxy ==========\n";
+
+    default_vector<Position, Color> vec(
+        { glm::vec3(0,0,0), glm::vec3(1,1,1), glm::vec3(2,2,2) },
+        { glm::vec4(1,0,0,1), glm::vec4(0,1,0,1), glm::vec4(0,0,1,1) }
+    );
+
+    auto s = vec.slice<Position, Color>(0, 2);
+    auto proxy = s.as_proxy();
+
+    // proxy должен иметь доступ ко всем данным вектора (не только слайса!)
+    ASSERT(proxy.size() == 3);  // полный размер, а не 2!
+    ASSERT(proxy.vector<Position>()[2] == glm::vec3(2, 2, 2));
+
+    std::cout << "✅ as_proxy() returns full proxy\n";
+}
+
+void test_slice_empty() {
+    std::cout << "\n========== test_slice_empty ==========\n";
+
+    default_vector<Position, Color> vec(5);
+
+    // Пустой слайс (begin == end)
+    auto s = vec.slice<Position>(2, 2);
+    ASSERT(s.size() == 0);
+
+    // Проверяем, что data() с пустым слайсом не крашится
+    const glm::vec3* ptr = s.data<Position>();
+    ASSERT(ptr != nullptr);  // Указатель на начало (но dereferencing нельзя)
+
+    std::cout << "✅ Empty slice works\n";
+}
+
+void test_slice_out_of_range() {
+    std::cout << "\n========== test_slice_out_of_range ==========\n";
+
+    default_vector<Position, Color> vec(5);
+
+    bool caught = false;
+    try {
+        auto s = vec.slice<Position>(2, 10);  // end > size()
+    }
+    catch (const std::out_of_range& e) {
+        caught = true;
+        std::cout << "✅ Caught expected exception: " << e.what() << "\n";
+    }
+    ASSERT(caught);
+
+    caught = false;
+    try {
+        auto s = vec.slice<Position>(5, 3);  // begin > end
+    }
+    catch (const std::out_of_range& e) {
+        caught = true;
+        std::cout << "✅ Caught expected exception: " << e.what() << "\n";
+    }
+    ASSERT(caught);
+
+    std::cout << "✅ Out of range validation works\n";
+}
+
+void test_slice_for_each() {
+    std::cout << "\n========== test_slice_for_each ==========\n";
+
+    default_vector<Position, Color> vec(
+        { glm::vec3(0,0,0), glm::vec3(1,1,1), glm::vec3(2,2,2), glm::vec3(3,3,3) },
+        { glm::vec4(1,0,0,1), glm::vec4(0,1,0,1), glm::vec4(0,0,1,1), glm::vec4(1,1,0,1) }
+    );
+
+    auto s = vec.slice<Position, Color>(1, 3);
+
+    // Модифицируем через for_each (нужно будет реализовать в slice_proxy)
+    // Пока просто проверяем чтение
+    float sum_x = 0;
+    for (size_t i = 0; i < s.size(); ++i) {
+        sum_x += s.vector<Position>()[i].x;
+    }
+    ASSERT(sum_x == 1.0f + 2.0f);
+
+    std::cout << "✅ Slice iteration works\n";
+}
+
 void test_default_construction() {
     std::cout << "\n========== test_default_construction ==========\n";
 
