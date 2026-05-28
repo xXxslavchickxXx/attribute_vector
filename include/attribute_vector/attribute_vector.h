@@ -2,12 +2,20 @@
 
 #include "../versionedVector/versioned_vector.h"
 #include "../type_traits/type_traits.h"
+#include <proxy/base/base.h>
 
 template<template<typename...> typename Vec, typename... Tags>
 class attribute_vector {
 	std::tuple<Vec<typename Tags::type>...> _data;
+
+	using self = attribute_vector<Vec, Tags...>;
 		
 public:
+	template<typename... SelectedTags>
+	auto get_base() {
+		return base_proxy<self, false, SelectedTags...>(&_data);
+	}
+
 	template<typename... SelectedTags>
 	auto with();
 	template<typename... SelectedTags>
@@ -31,10 +39,13 @@ public:
 	void erase(size_t where, size_t count);
 
 public:
-	template<bool Is_const, typename... SelectedTags>
-	class multi_proxy;
 	template<bool IsConst, typename Tag>
 	class single_proxy;
+
+	using data_type = std::tuple<Vec<typename Tags::type>...>;
+	using tags = std::tuple<Tags...>;
+	template<typename T>
+	using vec_type = Vec<T>;
 
 /// <summary>
 /// Конструкторы, которые могут

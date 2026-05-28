@@ -77,7 +77,7 @@ auto attribute_vector<Vec, Tags...>::with() {
 	static_assert((hasTag<SelectedTags, Tags...>() && ...),
 		"one of the tags is not in the collection");
 
-	return multi_proxy<false, SelectedTags...>(_data);
+	return multi_proxy<self, false, SelectedTags...>(_data);
 }
 
 template<template<typename...> typename Vec, typename... Tags>
@@ -86,7 +86,7 @@ const auto attribute_vector<Vec, Tags...>::with() const {
 	static_assert((hasTag<SelectedTags, Tags...>() && ...),
 		"one of the tags is not in the collection");
 
-	return multi_proxy<true, SelectedTags...>(_data);
+	return multi_proxy<self, true, SelectedTags...>(_data);
 }
 
 template<template<typename...> typename Vec, typename... Tags>

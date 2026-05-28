@@ -8,7 +8,7 @@ class attribute_vector<Vec, Tags...>::single_proxy {
     using TupleType = std::tuple<Vec<typename Tags::type>...>;
     using PointerType = std::conditional_t<IsConst, const TupleType*, TupleType*>;
 
-    multi_proxy<IsConst, Tag> _proxy;
+    multi_proxy<typename attribute_vector<Vec, Tags...>::self, IsConst, Tag> _proxy;
 
 public:
     using is_single_proxy_tag = void;
@@ -33,7 +33,7 @@ public:
     }
 
     // Доступ к элементу
-    decltype(auto) operator[](size_t i) {
+    auto operator[](size_t i) {
         return _proxy.template mutable_vector<Tag>()[i];
     }
     const auto& operator[](size_t i) const {

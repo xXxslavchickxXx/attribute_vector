@@ -58,6 +58,9 @@ struct is_attribute_vector : std::false_type {};
 template<template<typename...> typename Vec, typename... Args>
 struct is_attribute_vector<attribute_vector<Vec, Args...>> : std::true_type {};
 
+template<typename T>
+constexpr bool is_attribute_vector_v = is_attribute_vector<T>::value;
+
 template<typename Tuple1, typename Tuple2>
 concept SameTags = (std::tuple_size_v<Tuple1> == std::tuple_size_v<Tuple2>) &&
 []<size_t... Is>(std::index_sequence<Is...>) {
