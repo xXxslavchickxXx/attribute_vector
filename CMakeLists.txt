@@ -97,7 +97,9 @@ file(GLOB_RECURSE ${CMAKE_PROJECT_NAME}_FILES
 )
 
 # 1. Путь к файлу-точке входа для приложения-примера (например: main.cpp)
-set("${CMAKE_PROJECT_NAME}_EXAMPLE_FILEPATH" tests/test.cpp)#example.cpp)
+set("${CMAKE_PROJECT_NAME}_EXAMPLE_FILEPATH" 
+#example.cpp)
+tests/test.cpp)
 
 # 2. Ручное указание файлов твоей библиотеки (если хочешь перечислить конкретные файлы)
 set("${CMAKE_PROJECT_NAME}_LIB_H"   "")
