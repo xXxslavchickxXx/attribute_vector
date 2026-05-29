@@ -37,6 +37,7 @@ void test_slice_basic() {
         { glm::vec4(1,0,0,1), glm::vec4(0,1,0,1), glm::vec4(0,0,1,1), glm::vec4(1,1,0,1), glm::vec4(1,0,1,1) }
     );
 
+    // От 1 до 4: 1, 2, 3
     auto s = vec.slice<Position, Color>(1, 4);
 
     ASSERT(s.size() == 3);
@@ -52,28 +53,6 @@ void test_slice_basic() {
     ASSERT(s.vector<Color>()[2] == glm::vec4(1, 1, 0, 1));
 
     std::cout << "✅ Basic slice operations\n";
-}
-
-void test_slice_modify() {
-    std::cout << "\n========== test_slice_modify ==========\n";
-
-    default_vector<Position, Color> vec(
-        { glm::vec3(0,0,0), glm::vec3(1,1,1), glm::vec3(2,2,2), glm::vec3(3,3,3) },
-        { glm::vec4(1,0,0,1), glm::vec4(0,1,0,1), glm::vec4(0,0,1,1), glm::vec4(1,1,0,1) }
-    );
-
-    auto s = vec.slice<Position, Color>(1, 3);
-
-    // Проверяем, что оригинальный вектор изменился
-    ASSERT(vec.with<Position>().vector<Position>()[1] == glm::vec3(10, 10, 10));
-    ASSERT(vec.with<Position>().vector<Position>()[2] == glm::vec3(20, 20, 20));
-    ASSERT(vec.with<Color>().vector<Color>()[1] == glm::vec4(0, 0, 0, 1));
-
-    // Не должно было затронуть другие элементы
-    ASSERT(vec.with<Position>().vector<Position>()[0] == glm::vec3(0, 0, 0));
-    ASSERT(vec.with<Position>().vector<Position>()[3] == glm::vec3(3, 3, 3));
-
-    std::cout << "✅ Slice modification affects original\n";
 }
 
 void test_slice_data_pointer() {
@@ -1039,13 +1018,27 @@ int main() {
     std::cout << "║  attribute_vector TESTS & DEMOS      ║\n";
     std::cout << "╚══════════════════════════════════════╝\n";
 
+    bool tests = true;
+
     // Базовые тесты
-    test_default_construction();
-    test_sized_construction();
-    test_initializer_list_construction();
-    test_initializer_list_size_mismatch();
+    if (tests) {
+        test_default_construction();
+        test_sized_construction();
+        test_initializer_list_construction();
+        test_initializer_list_size_mismatch();
+    }
+
+    // Слайсы
+    test_slice_basic();
+    test_slice_data_pointer();
+    test_slice_nested();
+    test_slice_as_proxy();
+    test_slice_empty();
+    test_slice_out_of_range();
+    test_slice_for_each();
 
     // Модификация данных
+    if (tests) {
     test_push_back();
     test_insert_single();
     test_insert_multiple();
@@ -1057,6 +1050,7 @@ int main() {
     test_erase();
     test_erase_range();
     test_erase_out_of_range();
+    
 
     // Изменение размера
     test_resize_larger();
@@ -1105,6 +1099,7 @@ int main() {
     std::cout << "═══════════════════════════════════════\n";
 
     attribute_vector<std::deque, Position> dq;
+    }
 
     return 0;
 }

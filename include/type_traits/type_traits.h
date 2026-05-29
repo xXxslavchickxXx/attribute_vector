@@ -7,6 +7,13 @@ template<template<typename...> typename Vec, typename... Tags>
 class attribute_vector;
 
 /// TT
+// Концепт на соответствие форме типа атрибут вектора
+template<typename T>
+concept IsTag = requires {
+	typename T::type;
+	typename T::default_value;
+};
+
 template<typename T, typename = void>
 struct TypeHasTags : std::false_type {};
 

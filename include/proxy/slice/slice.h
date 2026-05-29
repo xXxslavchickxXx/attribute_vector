@@ -2,23 +2,36 @@
 
 #include <proxy/multi/multi_proxy.h>
 #include <iostream>
+#include <span>
 
 template<IsAttributeVector AttributeVectorT, bool IsConst, typename... SelectedTags>
 class slice_proxy : public base_proxy<AttributeVectorT, IsConst, SelectedTags...> {
     using Base = base_proxy<AttributeVectorT, IsConst, SelectedTags...>;
     using Base::data_;
     using Base::PointerType;
+    using Base::get_tag_index;
+
+    template<typename Tag>
+    using span_tag = std::conditional_t<IsConst,
+        std::span<const typename Tag::type>,
+        std::span<typename Tag::type>>;
 
     size_t _begin;
     size_t _end;
 
 public:
+
     // Конструктор
     slice_proxy(PointerType data, size_t begin, size_t end)
         : Base(data), _begin(begin), _end(end)
     {
         if (begin > end) throw std::out_of_range("slice: begin > end");
-        if (end > this->size()) throw std::out_of_range("slice: end out of range");
+        if (end > Base::size()) throw std::out_of_range("slice: end out of range");
+    }
+
+    template<typename Tag>
+    span_tag<Tag> vector() {
+        return span_tag<Tag>(std::get<get_tag_index<Tag>()>(*data_).data() + _begin, size());
     }
 
     // Размер
