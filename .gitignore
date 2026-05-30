@@ -36,3 +36,4 @@ build/
 /CppProperties.json
 .attribute vector.vcxproj
 /attribute vector.cpp
+/CMakeSettings.json
