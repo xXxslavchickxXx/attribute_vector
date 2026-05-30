@@ -37,7 +37,7 @@ set(${PROJECT_NAME}_LIBS glm::glm)
 set(${PROJECT_NAME}_EXAMPLE_LIBS "")
 
 # Опции сборки
-option(${PROJECT_NAME}_BUILD_EXAMPLE "Построить пример для проекта" ON)
+option(${PROJECT_NAME}_BUILD_EXAMPLE "Построить пример для проекта" OFF)
 option(${PROJECT_NAME}_ASSET_TO_BUILD "Копировать ассеты в папку сборки" OFF)
 
 # Собираем либу
