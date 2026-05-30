@@ -9,6 +9,8 @@ function(create_library TARGET_NAME)
     set(oneValueArgs "")
     set(multiValueArgs HEADERS SOURCES INCLUDE_DIRS LIBS)
     cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    message(STATUS "[INFO] Текущее имя таргета для создания либы: '${TARGET_NAME}'")
     
     # Автоматическое определение типа библиотеки
     if(NOT ARG_SOURCES)
