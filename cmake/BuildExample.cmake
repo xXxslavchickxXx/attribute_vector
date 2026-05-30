@@ -4,7 +4,10 @@ endif()
 set(__LIB_EXECUTABLE_INCLUDED TRUE)
 
 function(create_executable TARGET_NAME)
-    cmake_parse_arguments(ARG "" "SOURCE;COPY_ASSETS" "LIBS" ${ARGN})
+    set(options "")
+    set(oneValueArgs SOURCE COPY_ASSETS)
+    set(multiValueArgs LIBS)
+    cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     
     # Проверка: указан ли источник?
     if(NOT ARG_SOURCE)
@@ -23,7 +26,7 @@ function(create_executable TARGET_NAME)
     # Создаём исполняемый файл
     add_executable(${TARGET_NAME} ${ARG_SOURCE})
     
-    # Линкуем библиотеки
+    # Линкуем библиотеки (теперь работает со списком)
     if(ARG_LIBS)
         target_link_libraries(${TARGET_NAME} PRIVATE ${ARG_LIBS})
     endif()

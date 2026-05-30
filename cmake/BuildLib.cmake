@@ -5,7 +5,10 @@ set(__LIB_CREATED_INCLUDED TRUE)
 
 # Функция для сборки либы
 function(create_library TARGET_NAME)
-    cmake_parse_arguments(ARG "" "HEADERS;SOURCES;INCLUDE_DIRS;LIBS" "" ${ARGN})
+    set(options "")
+    set(oneValueArgs "")
+    set(multiValueArgs HEADERS SOURCES INCLUDE_DIRS LIBS)
+    cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     
     # Автоматическое определение типа библиотеки
     if(NOT ARG_SOURCES)
@@ -36,7 +39,11 @@ function(create_library TARGET_NAME)
     # Добавляем include директории
     if(NOT ARG_INCLUDE_DIRS)
         set(ARG_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/include")
+        message(STATUS "[INFO] Не указаны пути поиска заголовков, выставлен стандартный путь: ${CMAKE_CURRENT_SOURCE_DIR}/include")
+    else()
+        message(STATUS "[INFO] Пути заголовков получены: ${ARG_INCLUDE_DIRS}")
     endif()
+    
     target_include_directories(${TARGET_NAME} ${SCOPE_TYPE} ${ARG_INCLUDE_DIRS})
 
     # Линкуем библиотеки
