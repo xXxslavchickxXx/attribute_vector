@@ -14,6 +14,8 @@ class attribute_vector {
 	using self = attribute_vector<Vec, Tags...>;
 		
 public:
+	using tags = std::tuple<Tags...>;
+
 	template<typename... SelectedTags>
 	auto get_base() {
 		return base_proxy<self, false, SelectedTags...>(&_data);
