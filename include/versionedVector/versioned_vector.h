@@ -37,7 +37,6 @@ public:
     bool operator!=(const T& data) { return data != _value; }
 
     // Доступ к членам, если T — структура
-    auto* operator->() { return &_value; }
     const auto* operator->() const { return &_value; }
 };
 
@@ -166,8 +165,8 @@ public:
     using iterator = typename std::vector<T>::iterator;
     using const_iterator = typename std::vector<T>::const_iterator;
 
-    iterator begin() { return rawVector.begin(); }
-    iterator end() { return rawVector.end(); }
+    //iterator begin() { return rawVector.begin(); }
+    //iterator end() { return rawVector.end(); }
     const_iterator begin() const { return rawVector.begin(); }
     const_iterator end() const { return rawVector.end(); }
     const_iterator cbegin() const { return rawVector.cbegin(); }
@@ -187,7 +186,7 @@ public:
     const T& back() const { return rawVector.back(); }
 
     // Raw data access
-    T* data() { return rawVector.data(); }
+    //T* data() { return rawVector.data(); } // Нельзя, ткк данные при изменении версию оставят
     const T* data() const { return rawVector.data(); }
 
     // Capacity
