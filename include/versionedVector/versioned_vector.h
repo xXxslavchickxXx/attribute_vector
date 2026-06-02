@@ -72,6 +72,8 @@ private:
     }
 
 public:
+    using value_type = std::vector<T>::value_type;
+
     struct ranges {
         size_t begin;
         size_t end;
