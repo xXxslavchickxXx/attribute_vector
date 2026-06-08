@@ -51,4 +51,7 @@ if(${PROJECT_NAME}_BUILD_EXAMPLE)
         SOURCE ${${PROJECT_NAME}_EXAMPLE_FILEPATH}
         LIBS ${PROJECT_NAME}
     )
+    set_source_files_properties(${${PROJECT_NAME}_EXAMPLE_FILEPATH} PROPERTIES
+        OBJECT_DEPENDS "${${PROJECT_NAME}_LIB_H}"
+    )
 endif()
