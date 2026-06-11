@@ -167,8 +167,8 @@ public:
     using iterator = typename std::vector<T>::iterator;
     using const_iterator = typename std::vector<T>::const_iterator;
 
-    //iterator begin() { return rawVector.begin(); }
-    //iterator end() { return rawVector.end(); }
+    iterator begin() { return rawVector.begin(); }
+    iterator end() { return rawVector.end(); }
     const_iterator begin() const { return rawVector.begin(); }
     const_iterator end() const { return rawVector.end(); }
     const_iterator cbegin() const { return rawVector.cbegin(); }
