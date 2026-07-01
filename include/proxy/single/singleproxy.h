@@ -29,6 +29,7 @@ public:
     using Base::upload_list;
     using Base::push_back;
     using Base::pop_back;
+    using Base::empty;
 
     auto begin() {
         return this->mutable_vector<Tag>().begin();

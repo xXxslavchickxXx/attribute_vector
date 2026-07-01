@@ -19,6 +19,7 @@ public:
 	using Base::tags;
 	using Base::owner_tags;
 	using Base::vector;
+	using Base::empty;
 
 	/// Методы вставки
 	template<typename AnotherProxy>

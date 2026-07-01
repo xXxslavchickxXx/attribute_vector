@@ -10,6 +10,7 @@ int main() {
 	);
 	auto base = vect.get_base<test::Position>();
 	auto multi = vect.with<test::Position>();
+	auto single = vect.attribute<test::Position>();
 	std::cout << base.vector<test::Position>();
 
 	std::cout << "hello cmake\n";
