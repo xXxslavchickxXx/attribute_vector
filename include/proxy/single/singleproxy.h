@@ -38,6 +38,13 @@ public:
         return this->mutable_vector<Tag>().end();
     }
 
+    typename Tag::type back() const {
+        return vec().back();
+    }
+    typename Tag::type front() const {
+        return vec().front();
+    }
+
     // Доступ к элементу
     decltype(auto) operator[](size_t i) {
         return this->mutable_vector<Tag>()[i];
