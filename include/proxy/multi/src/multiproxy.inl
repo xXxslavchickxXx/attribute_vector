@@ -7,6 +7,13 @@
 #define multi_proxy_type multi_proxy<AttributeVectorT, IsConst, SelectedTags...>
 
 multi_proxy_template
+void multi_proxy_type::clear() requires (!IsConst) {
+	execute_for_all([&](auto& vector) {
+		vector.clear();
+	});
+}
+
+multi_proxy_template
 template<typename... Tags>
 auto multi_proxy_type::slice(size_t begin, size_t end) {
 	static_assert((hasTag<Tags, SelectedTags...>() && ...),

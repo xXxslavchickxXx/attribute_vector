@@ -35,6 +35,7 @@ public:
 	/// Методы удаления
 	void erase(size_t where) requires (!IsConst);
 	void erase(size_t where, size_t n) requires (!IsConst);
+	void clear() requires (!IsConst);
 
 	/// Методы резервирования и ресайзов
 	void reserve(size_t new_capacity) requires (!IsConst);

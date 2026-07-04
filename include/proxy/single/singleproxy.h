@@ -30,6 +30,7 @@ public:
     using Base::push_back;
     using Base::pop_back;
     using Base::empty;
+    using Base::clear;
 
     auto begin() {
         return this->mutable_vector<Tag>().begin();
