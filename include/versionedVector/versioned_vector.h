@@ -73,6 +73,51 @@ private:
 
 public:
     using value_type = std::vector<T>::value_type;
+    class iterator {
+        using iterator_category = std::random_access_iterator_tag;
+        using value_type = T;
+        using difference_type = std::ptrdiff_t;
+
+        versionedVector* parent;
+        size_t index;
+
+    public:
+        iterator(versionedVector* p, size_t i) : parent(p), index(i) {}
+
+        auto operator*() {
+            auto mark = [this]() { parent->mark_dirty_index(index); };
+            return Field<T, decltype(mark)>(std::move(mark), parent->rawVector[index]);
+        }
+
+        auto operator->() {
+            auto mark = [this]() { parent->mark_dirty_index(index); };
+            return Field<T, decltype(mark)>(std::move(mark), parent->rawVector[index]);
+        }
+
+        iterator& operator++() { ++index; return *this; }
+        iterator operator++(int) { auto tmp = *this; ++index; return tmp; }
+        iterator& operator--() { --index; return *this; }
+        iterator operator--(int) { auto tmp = *this; --index; return tmp; }
+
+        iterator& operator+=(difference_type n) { index += n; return *this; }
+        iterator& operator-=(difference_type n) { index -= n; return *this; }
+
+        friend iterator operator+(iterator it, difference_type n) { return it += n; }
+        friend iterator operator+(difference_type n, iterator it) { return it += n; }
+        friend iterator operator-(iterator it, difference_type n) { return it -= n; }
+        friend difference_type operator-(const iterator& a, const iterator& b) { return a.index - b.index; }
+
+        operator typename std::vector<T>::const_iterator() const {
+            return parent->rawVector.begin() + index;
+        }
+
+        bool operator==(const iterator& other) const { return index == other.index; }
+        bool operator!=(const iterator& other) const { return index != other.index; }
+        bool operator<(const iterator& other) const { return index < other.index; }
+        bool operator>(const iterator& other) const { return index > other.index; }
+        bool operator<=(const iterator& other) const { return index <= other.index; }
+        bool operator>=(const iterator& other) const { return index >= other.index; }
+    };
 
     struct ranges {
         size_t begin;
@@ -164,11 +209,11 @@ public:
     }
 
     // Iterators
-    using iterator = typename std::vector<T>::iterator;
+    //using iterator = typename std::vector<T>::iterator;
     using const_iterator = typename std::vector<T>::const_iterator;
-
-    //iterator begin() { return rawVector.begin(); }
-    //iterator end() { return rawVector.end(); }
+    
+    iterator begin() { return iterator(this, 0); }
+    iterator end() { return iterator(this, size()); }
     const_iterator begin() const { return rawVector.begin(); }
     const_iterator end() const { return rawVector.end(); }
     const_iterator cbegin() const { return rawVector.cbegin(); }
