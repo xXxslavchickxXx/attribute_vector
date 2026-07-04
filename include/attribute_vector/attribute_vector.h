@@ -46,6 +46,7 @@ public:
 
 	void erase(size_t where);
 	void erase(size_t where, size_t count);
+	void clear();
 
 public:
 	using data_type = std::tuple<Vec<typename Tags::type>...>;

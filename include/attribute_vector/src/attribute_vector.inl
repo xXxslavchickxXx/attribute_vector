@@ -29,6 +29,11 @@ void attribute_vector<Vec, Tags...>::
 {
 	this->with<Tags...>().erase(where, count);
 }
+
+attribute_template
+void attribute_type::clear() {
+	this->with<Tags...>().clear();
+}
 	
 template<template<typename...> typename Vec, typename... Tags>
 void attribute_vector<Vec, Tags...>::
