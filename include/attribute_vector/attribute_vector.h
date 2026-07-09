@@ -37,6 +37,7 @@ public:
 	auto slice(size_t begin, size_t end) const;
 
 	size_t size() const;
+	bool empty() const;
 	size_t capacity() const;
 
 	void show_vector() const;

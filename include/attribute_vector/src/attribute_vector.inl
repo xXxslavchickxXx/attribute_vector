@@ -119,6 +119,10 @@ inline size_t attribute_vector<Vec, Tags...>::size() const {
 }
 
 template<template<typename...> typename Vec, typename... Tags>
+inline bool attribute_vector<Vec, Tags...>::empty() const {
+	return size() == 0;
+}
+template<template<typename...> typename Vec, typename... Tags>
 size_t attribute_vector<Vec, Tags...>::capacity() const {
 	return std::get<0>(_data).capacity();
 }
