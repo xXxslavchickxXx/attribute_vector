@@ -2,7 +2,7 @@
 
 ![C++17](https://img.shields.io/badge/C%2B%2B-17-blue.svg)
 ![Header-Only](https://img.shields.io/badge/library-header--only-brightgreen.svg)
-![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 **`attribute_vector`** — это производительный C++17 header-only контейнер для удобного хранения и обработки разнородных атрибутов объектов.
 
