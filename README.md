@@ -120,15 +120,12 @@ attribute_vector/
 └── LICENSE
 ```
 
-## Лицензия
-Этот проект распространяется под лицензией MIT. Подробнее см. в файле LICENSE.
-
 ## Контрибьюция
 Если вы нашли баг или хотите предложить улучшение — открывайте Issue или Pull Request. Любая помощь приветствуется!
 
 ## Контакты
-GitHub: xXxslavchickxXx
+- GitHub: xXxslavchickxXx
 
-Email: slaverint@gmail.com
+- Email: slaverint@gmail.com
 
 Если проект оказался полезным — поставьте звезду на GitHub!
