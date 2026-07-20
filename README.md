@@ -67,7 +67,7 @@ include(FetchContent)
 
 FetchContent_Declare(
     attribute_vector
-    GIT_REPOSITORY [https://github.com/xXxslavchickxXx/attribute_vector.git](https://github.com/xXxslavchickxXx/attribute_vector.git)
+    GIT_REPOSITORY https://github.com/xXxslavchickxXx/attribute_vector.git
     GIT_TAG main
 )
 FetchContent_MakeAvailable(attribute_vector)
