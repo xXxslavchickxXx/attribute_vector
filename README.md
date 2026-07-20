@@ -124,8 +124,8 @@ attribute_vector/
 Если вы нашли баг или хотите предложить улучшение — открывайте Issue или Pull Request. Любая помощь приветствуется!
 
 ## Контакты
-- GitHub: xXxslavchickxXx
 
-- Email: slaverint@gmail.com
+- **GitHub:** [@xXxslavchickxXx](https://github.com/xXxslavchickxXx)
+- **Email:** [slaverint@gmail.com](mailto:slaverint@gmail.com)
 
 Если проект оказался полезным — поставьте звезду на GitHub!
