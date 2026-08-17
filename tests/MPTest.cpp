@@ -13,8 +13,6 @@ struct DoubleTag {
     using type = double;
 };
 
-using VectorType = default_vector<IntTag, FloatTag>; 
-
 using VectorType = default_vector<IntTag, FloatTag>;
 using Vector3Type = default_vector<IntTag, FloatTag, DoubleTag>;
 

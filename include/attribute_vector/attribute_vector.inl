@@ -6,6 +6,7 @@
 #include "../proxy/multi/multi_proxy.h"
 #include "../proxy/single/singleproxy.h"
 #include <proxy/slice/slice.h>
+#include <stdexcept>
 
 attribute_template
 template<typename... SelectedTags>
