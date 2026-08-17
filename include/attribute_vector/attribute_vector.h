@@ -14,14 +14,11 @@ class attribute_vector {
 	// Асерты на теги
 	static_assert(((requires { typename Tags::type; }) && ...),
 		"All tags must have a nested type 'type'!");
-
 	std::tuple<Vec<typename Tags::type>...> _data;
 
 	using self = attribute_vector<Vec, Tags...>;
 		
 public:
-	using tags = std::tuple<Tags...>;
-
 	template<typename... SelectedTags>
 	auto get_base() {
 		return base_proxy<self, false, SelectedTags...>(&_data);

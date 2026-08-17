@@ -300,9 +300,11 @@ multi_proxy_template
 template<typename Tag, typename Container>
 void multi_proxy_type::upload_one(size_t where, const Container& container) {
 	auto& vec = this->template mutable_vector<Tag>();
-	// Проверка типа итератора
-	static_assert(!std::is_const_v<std::remove_reference_t<decltype(*vec.begin())>>,
-		"vec.begin() returns const_iterator!");
+	size_t needed_size = where + container.size();
+
+	if (needed_size > vec.size()) {
+		this->resize(needed_size);
+	}
 
 	std::copy(container.begin(), container.end(), vec.begin() + where);
 }
