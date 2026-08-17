@@ -13,7 +13,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/BuildExample.cmake)
 
 # может вы хотите какие то файлы в папках автоматически находить
 file(GLOB_RECURSE ${PROJECT_NAME}_FILES
-    "include/proxy/base/*.h"
+    "include/*.h"
 )
 
 set(${PROJECT_NAME}_TESTS
@@ -21,13 +21,14 @@ set(${PROJECT_NAME}_TESTS
     "tests/MPTest.cpp"
     "tests/AVTest.cpp"
     "tests/SPTest.cpp"
+    "tests/SliceTest.cpp"
     #"tests/AliasGenTests.cpp"
     #"tests/ClassGenTests.cpp"
 )
 
 message(STATUS "Found files: ${${PROJECT_NAME}_FILES}")
 
-# 1. Путь к файлу-точке входа для приложения-примера (например: main.cpp)
+# 1. Путь к файлу-точке входа для приложения-примера
 set(${PROJECT_NAME}_EXAMPLE_FILEPATH
 example.cpp)
 #tests/test.cpp)
@@ -39,11 +40,11 @@ set(${PROJECT_NAME}_LIB_CPP "")
 # 3. Подключение инклудов
 set(${PROJECT_NAME}_INCLUDE "")
 
-# 3. Внешние либы для линковки к твоей основной библиотеке (например: gpuBuffers)
+# 3. Внешние либы для линковки к твоей основной библиотеке
 find_package(glm)
 set(${PROJECT_NAME}_LIBS glm::glm)
 
-# 4. Либы, нужные ТОЛЬКО для запуска приложения-примера (например: shaderLib)
+# 4. Либы, нужные ТОЛЬКО для запуска приложения-примера
 set(${PROJECT_NAME}_EXAMPLE_LIBS "")
 
 # Опции сборки

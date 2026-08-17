@@ -62,6 +62,9 @@ public:
 	template<typename... Tags>
 	auto slice(size_t begin, size_t end) const;
 
+	auto slice(size_t begin, size_t end);
+	auto slice(size_t begin, size_t end) const;
+
 private:
 	template<typename F>
 	void execute_for_other(F&& func);

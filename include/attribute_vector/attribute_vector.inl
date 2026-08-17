@@ -5,21 +5,21 @@
 #include <tuple>
 #include "../proxy/multi/multi_proxy.h"
 #include "../proxy/single/singleproxy.h"
-//#include <proxy/slice/slice.h>
+#include <proxy/slice/slice.h>
 
 attribute_template
 template<typename... SelectedTags>
 auto attribute_vector<Vec, Tags...>::slice(size_t begin, size_t end) {
 	static_assert((hasTag<SelectedTags, Tags...>() && ...),
 		"this slice requests tags that do not exist in this data.");
-	return 1;//slice_proxy<self, false, SelectedTags...>(&_data, begin, end);
+	return slice_proxy<self, false, SelectedTags...>(&_data, begin, end);
 }
 attribute_template
 template<typename... SelectedTags>
 auto attribute_vector<Vec, Tags...>::slice(size_t begin, size_t end) const {
 	static_assert((hasTag<SelectedTags, Tags...>() && ...),
 		"this slice requests tags that do not exist in this data.");
-	return 1;//slice_proxy<self, true, SelectedTags...>(&_data, begin, end);
+	return slice_proxy<self, true, SelectedTags...>(&_data, begin, end);
 }
 
 template<template<typename...> typename Vec, typename... Tags>

@@ -8,7 +8,7 @@ template<IsAttributeVector AttributeVectorT, bool IsConst, typename... SelectedT
 class slice_proxy : public base_proxy<AttributeVectorT, IsConst, SelectedTags...> {
     using Base = base_proxy<AttributeVectorT, IsConst, SelectedTags...>;
     using Base::data_;
-    using Base::PointerType;
+    using typename Base::PointerType;
     using Base::get_tag_index;
 
     template<typename Tag>
@@ -31,7 +31,9 @@ public:
 
     template<typename Tag>
     span_tag<Tag> vector() {
-        return span_tag<Tag>(std::get<get_tag_index<Tag>()>(*data_).data() + _begin, size());
+        return span_tag<Tag>(
+        std::get<Base::template get_tag_index<Tag>()>(*data_).data() + _begin,
+        size());
     }
 
     // Размер
@@ -39,12 +41,12 @@ public:
 
     template<typename Tag>
     const typename Tag::type* data() const {
-        return this->template vector<Tag>().data() + _begin;
+        return Base::template vector<Tag>().data() + _begin;
     }
 
     template<typename Tag>
     typename Tag::type* data() requires (!IsConst) {
-        return this->template mutable_vector<Tag>().data() + _begin;
+        return Base::template mutable_vector<Tag>().data() + _begin;
     }
 
     size_t offset() const {
