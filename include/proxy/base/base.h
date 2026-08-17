@@ -23,8 +23,8 @@ protected:
     using PointerType = std::conditional_t<IsConst, const DataType*, DataType*>;
     // Теги
 public:
-    using tags = std::tuple<SelectedTags...>;
-    using owner_tags = AttributeVectorT::tags;
+    using tags = typename std::tuple<SelectedTags...>;
+    using owner_tags = typename AttributeVectorT::tags;
 
 /// Данные класса
 protected:
@@ -56,11 +56,11 @@ protected:
 
         constexpr size_t result = []<size_t... Is>(std::index_sequence<Is...>) {
             size_t idx = 0;
-            ((std::is_same_v<Tag, std::tuple_element_t<Is, owner_tags>> ? (idx = Is, true) : false), ...);
+            ((std::is_same_v<Tag, std::tuple_element_t<Is, owner_tags>> ? (idx = Is) : false), ...);
             return idx;
         }(std::make_index_sequence<std::tuple_size_v<owner_tags>>{});
 
-        return 0;
+        return result;
     }
 
     // Удобный метод для вызова лямбд без аргв по шаблону

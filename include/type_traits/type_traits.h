@@ -11,7 +11,7 @@ class attribute_vector;
 template<typename T>
 concept IsTag = requires {
 	typename T::type;
-	requires std::is_default_constructible_v<T::type>;
+	requires std::is_default_constructible_v<typename T::type>;
 };
 
 template<typename T, typename = void>

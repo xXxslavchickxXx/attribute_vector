@@ -10,14 +10,11 @@ protected:
 	// Открываем допступ к родительским методам и полям
 	template<typename Tag>
 	using vec_type = typename Base::template vec_type<Tag>;
-	using Base::data_;
-	using Base::call;
-	using Base::mutable_vector;
 
 public:
+	using typename Base::owner_tags;
+	using typename Base::tags;
 	using Base::Base;
-	using Base::tags;
-	using Base::owner_tags;
 	using Base::vector;
 	using Base::empty;
 

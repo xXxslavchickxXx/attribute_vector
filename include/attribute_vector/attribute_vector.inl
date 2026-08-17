@@ -3,7 +3,7 @@
 #define attribute_template template<template<typename...> typename Vec, typename... Tags>
 
 #include <tuple>
-//#include "../proxy/multi/multi_proxy.h"
+#include "../proxy/multi/multi_proxy.h"
 //#include "../proxy/single/singleproxy.h"
 //#include <proxy/slice/slice.h>
 
@@ -48,7 +48,7 @@ void attribute_vector<Vec, Tags...>::
 {
 	static_assert(tuple_is_similar<std::tuple<Tags...>, std::tuple<AnotherTags...>>, 
 		"The tags of the copied attribute_vector do not contain the current attribute_vector.");
-	this->with<Tags...>().insert(where, vec.with<AnotherTags...>());
+	this->with<Tags...>().insert(where, vec.template with<AnotherTags...>());
 }
 
 template<template<typename...> typename Vec, typename... Tags>
@@ -100,7 +100,7 @@ auto attribute_vector<Vec, Tags...>::with() {
 	static_assert((hasTag<SelectedTags, Tags...>() && ...),
 		"one of the tags is not in the collection");
 
-	return 1;//multi_proxy<self, false, SelectedTags...>(_data);
+	return multi_proxy<self, false, SelectedTags...>(_data);
 }
 
 template<template<typename...> typename Vec, typename... Tags>
@@ -109,7 +109,7 @@ auto attribute_vector<Vec, Tags...>::with() const {
 	static_assert((hasTag<SelectedTags, Tags...>() && ...),
 		"one of the tags is not in the collection");
 
-	return 1;//multi_proxy<self, true, SelectedTags...>(_data);
+	return multi_proxy<self, true, SelectedTags...>(_data);
 }
 
 template<template<typename...> typename Vec, typename... Tags>
