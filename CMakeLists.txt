@@ -39,8 +39,7 @@ set(${PROJECT_NAME}_LIB_CPP "")
 set(${PROJECT_NAME}_INCLUDE "")
 
 # 3. Внешние либы для линковки к твоей основной библиотеке
-find_package(glm)
-set(${PROJECT_NAME}_LIBS glm::glm)
+set(${PROJECT_NAME}_LIBS)
 
 # 4. Либы, нужные ТОЛЬКО для запуска приложения-примера
 set(${PROJECT_NAME}_EXAMPLE_LIBS "")
