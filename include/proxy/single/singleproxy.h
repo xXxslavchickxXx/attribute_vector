@@ -69,15 +69,17 @@ public:
     // Итерация с каждым элементом
     template<typename F>
     void for_each(F&& func) const {
-        for (size_t i = 0; i < this->size(); ++i) {
-            func((*this)[i]);
+        auto& vec = this->template mutable_vector<Tag>();
+        for (auto& item : vec) {
+            func(item);
         }
     }
 
     template<typename F>
     void for_each(F&& func) requires (!IsConst) {
-        for (size_t i = 0; i < this->size(); ++i) {
-            func((*this)[i]);
+        auto& vec = this->template mutable_vector<Tag>();
+        for (auto& item : vec) {
+            func(item);
         }
     }
 
