@@ -66,7 +66,7 @@ auto attribute_vector<Vec, Tags...>::attribute() const {
 template<template<typename...> typename Vec, typename... Tags>
 attribute_vector<Vec, Tags...>::attribute_vector(size_t n)
 	:
-	_data(std::make_tuple(Vec<typename Tags::type>(n, Tags::defaultValue())...))
+	_data(std::make_tuple(Vec<typename Tags::type>(n, typename Tags::type())...))
 {}
 
 template<template<typename...> typename Vec, typename... Tags>

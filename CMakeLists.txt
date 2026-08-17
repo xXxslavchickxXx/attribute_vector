@@ -18,6 +18,7 @@ file(GLOB_RECURSE ${PROJECT_NAME}_FILES
 
 set(${PROJECT_NAME}_TESTS
     "tests/BaseProxy.cpp"
+    "tests/AVTest.cpp"
     #"tests/AliasGenTests.cpp"
     #"tests/ClassGenTests.cpp"
 )

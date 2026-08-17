@@ -36,18 +36,3 @@ template<typename Tag>
 base_proxy_type::vec_type<Tag>& base_proxy_type::mutable_vector() {
 	return std::get<get_tag_index<Tag>()>(*data_);
 }
-
-base_proxy_template
-template<typename Tag>
-constexpr size_t base_proxy_type::get_tag_index() const {
-	static_assert(tuple_contains_v<Tag, owner_tags>,
-	"this proxy doesn't contain this tag");
-
-	constexpr size_t result = []<size_t... Is>(std::index_sequence<Is...>) {
-		size_t idx = 0;
-		((std::is_same_v<Tag, std::tuple_element_t<Is, owner_tags>> ? (idx = Is, true) : false), ...);
-		return idx;
-	}(std::make_index_sequence<std::tuple_size_v<owner_tags>>{});
-
-	return result;
-}
