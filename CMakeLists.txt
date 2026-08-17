@@ -22,8 +22,6 @@ set(${PROJECT_NAME}_TESTS
     "tests/AVTest.cpp"
     "tests/SPTest.cpp"
     "tests/SliceTest.cpp"
-    #"tests/AliasGenTests.cpp"
-    #"tests/ClassGenTests.cpp"
 )
 
 message(STATUS "Found files: ${${PROJECT_NAME}_FILES}")

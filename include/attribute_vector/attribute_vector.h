@@ -14,8 +14,6 @@ class attribute_vector {
 	// Асерты на теги
 	static_assert(((requires { typename Tags::type; }) && ...),
 		"All tags must have a nested type 'type'!");
-	static_assert((std::is_default_constructible_v<typename Tags::type> && ...),
-		"Type in tag must have a default constructor!");
 
 	std::tuple<Vec<typename Tags::type>...> _data;
 
