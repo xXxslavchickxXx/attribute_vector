@@ -1,6 +1,6 @@
 #pragma once
 
-//#include <proxy/single/singleproxy.h>
+#include <proxy/single/singleproxy.h>
 //#include <proxy/slice/slice.h>
 
 #define multi_proxy_template template<IsAttributeVector AttributeVectorT, bool IsConst, typename... SelectedTags>
@@ -222,7 +222,7 @@ void multi_proxy_type::resize(size_t new_size, const SelectedTags::type&... valu
 	((this->template mutable_vector<SelectedTags>().resize(new_size, values)), ...);
 
 	auto reserve_one = [&]<typename Tag>() {
-		mutable_vector<Tag>().resize(new_size, typename Tag::type());
+		this->template mutable_vector<Tag>().resize(new_size, typename Tag::type());
 	};
 
 	execute_for_other(reserve_one);

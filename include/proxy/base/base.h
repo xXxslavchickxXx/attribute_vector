@@ -43,6 +43,7 @@ public:
     size_t capacity() const;
     bool empty() const;
 
+protected:
     // Получение изменяемого массива по тегу
     template<typename Tag>
     vec_type<Tag>& mutable_vector();

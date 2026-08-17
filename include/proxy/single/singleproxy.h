@@ -14,10 +14,10 @@ class single_proxy : private multi_proxy<AttributeVectorT, IsConst, Tag> {
     using Base::call;
 
 public:
-    using Base::tags;
+    using typename Base::tags;
+    using typename Base::owner_tags;
 
     using Base::size;
-    using Base::owner_tags;
     using Base::vector;
     using Base::Base;
     using Base::insert_list;
@@ -33,10 +33,10 @@ public:
     using Base::clear;
 
     auto begin() {
-        return this->mutable_vector<Tag>().begin();
+        return this->template mutable_vector<Tag>().begin();
     }
     auto end() {
-        return this->mutable_vector<Tag>().end();
+        return this->template mutable_vector<Tag>().end();
     }
 
     typename Tag::type back() const {
@@ -48,28 +48,25 @@ public:
 
     // Доступ к элементу
     decltype(auto) operator[](size_t i) {
-        return this->mutable_vector<Tag>()[i];
+        return this->template mutable_vector<Tag>()[i];
     }
     const auto& operator[](size_t i) const {
-        return this->vector<Tag>()[i];
+        return this->template vector<Tag>()[i];
     }
 
-    // Прямой доступ к данным
     const typename Tag::type* data() const {
-        return this->vector<Tag>().data();
+        return this->template vector<Tag>().data();
     }
 
-    // Доступ к вектору
     const auto& vec() const {
-        return this->vector<Tag>();
+        return this->template vector<Tag>();
     }
 
-    // Очистка
     void clear() requires (!IsConst) {
         this->resize(0);
     }
 
-    // Итерация
+    // Итерация с каждым элементом
     template<typename F>
     void for_each(F&& func) const {
         for (size_t i = 0; i < this->size(); ++i) {
@@ -84,16 +81,16 @@ public:
         }
     }
 
-    // Загрузка данных (upload) – обёртки над методами MultiProxy
+    // Загрузка данных 'upload' – обёртки над методами MultiProxy
     template<typename Container>
     void upload_containers(size_t where, const Container& container) requires (!IsConst) {
         static_assert(std::is_same_v<typename Container::value_type, typename Tag::type>,
             "Container value type does not match tag type");
-        this->upload_containers(where, container);
+        Base::upload_containers(where, container);
     }
 
     void insert_containers(size_t where, const std::vector<typename Tag::type>& container) requires (!IsConst) {
         if (where > this->size()) throw std::out_of_range("Insert position out of range");
-        this->insert_containers(where, container);
+        Base::insert_containers(where, container);
     }
 };

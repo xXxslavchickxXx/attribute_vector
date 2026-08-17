@@ -16,12 +16,3 @@ TEST(BaseProxyTest, SizeMatch) {
 
 	EXPECT_EQ(base.size(), 5);
 }
-
-TEST(BaseProxyTest, Modification) {
-	default_vector<IntTag, FloatTag> vec(5);
-	auto base = vec.get_base<IntTag, FloatTag>();
-
-	base.mutable_vector<IntTag>()[0] = 6;
-
-	EXPECT_EQ(base.vector<IntTag>()[0], 6);
-}

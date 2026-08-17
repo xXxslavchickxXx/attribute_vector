@@ -20,6 +20,7 @@ set(${PROJECT_NAME}_TESTS
     "tests/BPTest.cpp"
     "tests/MPTest.cpp"
     "tests/AVTest.cpp"
+    "tests/SPTest.cpp"
     #"tests/AliasGenTests.cpp"
     #"tests/ClassGenTests.cpp"
 )

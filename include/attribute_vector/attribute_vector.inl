@@ -4,7 +4,7 @@
 
 #include <tuple>
 #include "../proxy/multi/multi_proxy.h"
-//#include "../proxy/single/singleproxy.h"
+#include "../proxy/single/singleproxy.h"
 //#include <proxy/slice/slice.h>
 
 attribute_template
@@ -54,13 +54,13 @@ void attribute_vector<Vec, Tags...>::
 template<template<typename...> typename Vec, typename... Tags>
 template<typename Tag>
 auto attribute_vector<Vec, Tags...>::attribute() {
-	return 1;//single_proxy<self, false, Tag>(_data);
+	return single_proxy<self, false, Tag>(_data);
 }
 
 template<template<typename...> typename Vec, typename... Tags>
 template<typename Tag>
 auto attribute_vector<Vec, Tags...>::attribute() const {
-	return 1;//single_proxy<self, true, Tag>(_data);
+	return single_proxy<self, true, Tag>(_data);
 }
 
 template<template<typename...> typename Vec, typename... Tags>
