@@ -13,16 +13,21 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/BuildExample.cmake)
 
 # может вы хотите какие то файлы в папках автоматически находить
 file(GLOB_RECURSE ${PROJECT_NAME}_FILES
-    "include/*.h"
-    "include/*.inl"
+    "include/proxy/base/*.h"
+)
+
+set(${PROJECT_NAME}_TESTS
+    "tests/BaseProxy.cpp"
+    #"tests/AliasGenTests.cpp"
+    #"tests/ClassGenTests.cpp"
 )
 
 message(STATUS "Found files: ${${PROJECT_NAME}_FILES}")
 
 # 1. Путь к файлу-точке входа для приложения-примера (например: main.cpp)
 set(${PROJECT_NAME}_EXAMPLE_FILEPATH
-#example.cpp)
-tests/test.cpp)
+example.cpp)
+#tests/test.cpp)
 
 # 2. Ручное указание файлов твоей библиотеки (если хочешь перечислить конкретные файлы)
 set(${PROJECT_NAME}_LIB_H ${${PROJECT_NAME}_FILES})
@@ -41,6 +46,7 @@ set(${PROJECT_NAME}_EXAMPLE_LIBS "")
 # Опции сборки
 option(${PROJECT_NAME}_BUILD_EXAMPLE "Построить пример для проекта" OFF)
 option(${PROJECT_NAME}_ASSET_TO_BUILD "Копировать ассеты в папку сборки" OFF)
+option(${PROJECT_NAME}_BUILD_TESTS "собирать тесты" OFF)
 
 # Собираем либу
 create_library(attribute_vector
@@ -49,11 +55,48 @@ create_library(attribute_vector
 )
 
 if(${PROJECT_NAME}_BUILD_EXAMPLE)
-    create_executable(${PROJECT_NAME}_example
+    create_executable(${PROJECT_NAME}_tests
         SOURCE ${${PROJECT_NAME}_EXAMPLE_FILEPATH}
         LIBS ${PROJECT_NAME}
     )
     set_source_files_properties(${${PROJECT_NAME}_EXAMPLE_FILEPATH} PROPERTIES
         OBJECT_DEPENDS "${${PROJECT_NAME}_LIB_H}"
     )
+endif()
+
+create_executable(${PROJECT_NAME}_example
+    SOURCE example.cpp
+    LIBS ${PROJECT_NAME}
+)
+
+if(${PROJECT_NAME}_BUILD_TESTS)
+    if(${PROJECT_NAME}_TESTS)        
+        find_package(GTest CONFIG REQUIRED)        
+        
+        list(GET ${PROJECT_NAME}_TESTS 0 FIRST_TEST_FILE)        
+        list(REMOVE_AT ${PROJECT_NAME}_TESTS 0)
+
+        create_executable(run_tests
+            SOURCE ${FIRST_TEST_FILE}
+            LIBS 
+                ${PROJECT_NAME}
+                GTest::gtest
+                GTest::gtest_main
+        )        
+        
+        if(TARGET run_tests AND ${PROJECT_NAME}_TESTS)            
+            target_sources(run_tests PRIVATE ${${PROJECT_NAME}_TESTS})        
+        endif()        
+        
+        if(TARGET run_tests)            
+            enable_testing()            
+            include(GoogleTest)
+            gtest_discover_tests(run_tests)        
+        else()            
+            message(WARNING "[WARNING] Таргет run_tests не был создан.")        
+        endif()
+        
+    else()        
+        message(STATUS "[NOTICE] Тесты не будут собраны: папка tests/ пуста.")    
+    endif()
 endif()

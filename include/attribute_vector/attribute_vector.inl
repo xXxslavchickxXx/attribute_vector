@@ -1,26 +1,25 @@
 #pragma once
 
 #define attribute_template template<template<typename...> typename Vec, typename... Tags>
-#define attribute_type typename attribute_vector<Vec, Tags...>
 
 #include <tuple>
-#include "../../proxy/multi/multi_proxy.h"
-#include "../../proxy/single/singleproxy.h"
-#include <proxy/slice/slice.h>
+//#include "../proxy/multi/multi_proxy.h"
+//#include "../proxy/single/singleproxy.h"
+//#include <proxy/slice/slice.h>
 
 attribute_template
 template<typename... SelectedTags>
-auto attribute_type::slice(size_t begin, size_t end) {
+auto attribute_vector<Vec, Tags...>::slice(size_t begin, size_t end) {
 	static_assert((hasTag<SelectedTags, Tags...>() && ...),
 		"this slice requests tags that do not exist in this data.");
-	return slice_proxy<self, false, SelectedTags...>(&_data, begin, end);
+	return 1;//slice_proxy<self, false, SelectedTags...>(&_data, begin, end);
 }
 attribute_template
 template<typename... SelectedTags>
-auto attribute_type::slice(size_t begin, size_t end) const {
+auto attribute_vector<Vec, Tags...>::slice(size_t begin, size_t end) const {
 	static_assert((hasTag<SelectedTags, Tags...>() && ...),
 		"this slice requests tags that do not exist in this data.");
-	return slice_proxy<self, true, SelectedTags...>(&_data, begin, end);
+	return 1;//slice_proxy<self, true, SelectedTags...>(&_data, begin, end);
 }
 
 template<template<typename...> typename Vec, typename... Tags>
@@ -31,7 +30,7 @@ void attribute_vector<Vec, Tags...>::
 }
 
 attribute_template
-void attribute_type::clear() {
+void attribute_vector<Vec, Tags...>::clear() {
 	this->with<Tags...>().clear();
 }
 	
@@ -55,13 +54,13 @@ void attribute_vector<Vec, Tags...>::
 template<template<typename...> typename Vec, typename... Tags>
 template<typename Tag>
 auto attribute_vector<Vec, Tags...>::attribute() {
-	return single_proxy<self, false, Tag>(_data);
+	return 1;//single_proxy<self, false, Tag>(_data);
 }
 
 template<template<typename...> typename Vec, typename... Tags>
 template<typename Tag>
 auto attribute_vector<Vec, Tags...>::attribute() const {
-	return single_proxy<self, true, Tag>(_data);
+	return 1;//single_proxy<self, true, Tag>(_data);
 }
 
 template<template<typename...> typename Vec, typename... Tags>
@@ -101,7 +100,7 @@ auto attribute_vector<Vec, Tags...>::with() {
 	static_assert((hasTag<SelectedTags, Tags...>() && ...),
 		"one of the tags is not in the collection");
 
-	return multi_proxy<self, false, SelectedTags...>(_data);
+	return 1;//multi_proxy<self, false, SelectedTags...>(_data);
 }
 
 template<template<typename...> typename Vec, typename... Tags>
@@ -110,7 +109,7 @@ auto attribute_vector<Vec, Tags...>::with() const {
 	static_assert((hasTag<SelectedTags, Tags...>() && ...),
 		"one of the tags is not in the collection");
 
-	return multi_proxy<self, true, SelectedTags...>(_data);
+	return 1;//multi_proxy<self, true, SelectedTags...>(_data);
 }
 
 template<template<typename...> typename Vec, typename... Tags>

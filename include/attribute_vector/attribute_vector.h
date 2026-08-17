@@ -4,11 +4,19 @@
 #include "../type_traits/type_traits.h"
 #include <proxy/base/base.h>
 
+
+
 template<IsAttributeVector AttributeVectorT, bool IsConst, typename Tag>
 class single_proxy;
 
 template<template<typename...> typename Vec, typename... Tags>
 class attribute_vector {
+	// Асерты на теги
+	static_assert(((requires { typename Tags::type; }) && ...),
+		"All tags must have a nested type 'type'!");
+	static_assert((std::is_default_constructible_v<Tags::type> && ...),
+		"Type in tag must have a default constructor!");
+
 	std::tuple<Vec<typename Tags::type>...> _data;
 
 	using self = attribute_vector<Vec, Tags...>;
@@ -86,4 +94,4 @@ private:
 template<typename... Tags>
 using default_vector = attribute_vector<std::vector, Tags...>;
 
-#include "src/attribute_vector.inl"
+#include "attribute_vector.inl"
