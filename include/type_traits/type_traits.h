@@ -14,6 +14,14 @@ concept IsTag = requires {
 	requires std::is_default_constructible_v<typename T::type>;
 };
 
+template<typename Container>
+concept ContainerOf = requires(Container c) {
+	typename Container::value_type;
+	{ c.size() } -> std::convertible_to<size_t>;
+	{ c.begin() } -> std::input_iterator;
+	{ c.end() } -> std::input_iterator;
+};
+
 template<typename T, typename = void>
 struct TypeHasTags : std::false_type {};
 

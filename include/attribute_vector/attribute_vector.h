@@ -39,9 +39,9 @@ public:
 	template<typename... SelectedTags>
 	auto slice(size_t begin, size_t end) const;
 
-	size_t size() const;
-	bool empty() const;
-	size_t capacity() const;
+	constexpr size_t size() const noexcept;
+	constexpr bool empty() const noexcept;
+	constexpr size_t capacity() const noexcept;
 
 	void show_vector() const;
 

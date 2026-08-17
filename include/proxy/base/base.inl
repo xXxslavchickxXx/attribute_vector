@@ -19,11 +19,11 @@ base_proxy_type::base_proxy(const DataType& data) : base_proxy(&data) {}
 
 
 base_proxy_template
-size_t base_proxy_type::size() const { return std::get<0>(*data_).size(); }
+constexpr size_t base_proxy_type::size() const noexcept { return std::get<0>(*data_).size(); }
 base_proxy_template
-size_t base_proxy_type::capacity() const { return std::get<0>(*data_).capacity(); }
+constexpr size_t base_proxy_type::capacity() const noexcept { return std::get<0>(*data_).capacity(); }
 base_proxy_template
-bool base_proxy_type::empty() const { return size() == 0; }
+constexpr bool base_proxy_type::empty() const noexcept { return size() == 0; }
 
 base_proxy_template
 template<typename Tag>

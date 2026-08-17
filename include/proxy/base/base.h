@@ -13,6 +13,8 @@ concept IsAttributeVector = requires {
 
 template<IsAttributeVector AttributeVectorT, bool IsConst, typename... SelectedTags>
 class base_proxy {
+    static_assert(sizeof...(SelectedTags) > 0, "Must select at least one tag");
+
 protected:
 /// Алиасы
     // Шаблонный алиас для выведения типа вектора в тупле
@@ -39,9 +41,9 @@ public:
     template<typename Tag>
     const vec_type<Tag>& vector() const;
 
-    size_t size() const;
-    size_t capacity() const;
-    bool empty() const;
+    constexpr size_t size() const noexcept;
+    constexpr size_t capacity() const noexcept;
+    constexpr bool empty() const noexcept;
 
 protected:
     // Получение изменяемого массива по тегу

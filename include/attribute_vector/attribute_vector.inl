@@ -113,16 +113,16 @@ auto attribute_vector<Vec, Tags...>::with() const {
 }
 
 template<template<typename...> typename Vec, typename... Tags>
-inline size_t attribute_vector<Vec, Tags...>::size() const {
+inline constexpr size_t attribute_vector<Vec, Tags...>::size() const noexcept {
 	return std::get<0>(_data).size();
 }
 
 template<template<typename...> typename Vec, typename... Tags>
-inline bool attribute_vector<Vec, Tags...>::empty() const {
+inline constexpr bool attribute_vector<Vec, Tags...>::empty() const noexcept {
 	return size() == 0;
 }
 template<template<typename...> typename Vec, typename... Tags>
-size_t attribute_vector<Vec, Tags...>::capacity() const {
+constexpr size_t attribute_vector<Vec, Tags...>::capacity() const noexcept {
 	return std::get<0>(_data).capacity();
 }
 
