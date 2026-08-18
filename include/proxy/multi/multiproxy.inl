@@ -57,13 +57,66 @@ void multi_proxy_type::upload(size_t where, const AnotherProxy& proxy)
 
 	auto upload_from_proxy = [&]<typename Tag>() {
 		if constexpr (tuple_contains_v<Tag, InnerTags>) {
-			this->upload_one<Tag>(where, proxy.template vector<Tag>());
+			this->upload_one<Tag>(where,
+				proxy.template vector<Tag>());
 		}
 	};
 
 	(this->template call<SelectedTags>(upload_from_proxy), ...);
 }
 
+multi_proxy_template
+template<typename AnotherProxy>
+void multi_proxy_type::upload(size_t where, AnotherProxy&& proxy)
+	requires (!IsConst && has_tags_v<AnotherProxy>)
+{
+	using InnerTags = typename AnotherProxy::tags;
+
+	// Перемещаем прокси в локальную переменную
+	auto&& local_proxy = std::forward<AnotherProxy>(proxy);
+
+	auto upload_from_proxy = [&]<typename Tag>() {
+		if constexpr (tuple_contains_v<Tag, InnerTags>) {
+			// Перемещаем вектор из локальной копии
+			this->upload_one<Tag>(where,
+				std::move(local_proxy.template mutable_vector<Tag>()));
+		}
+	};
+
+	(this->template call<SelectedTags>(upload_from_proxy), ...);
+}
+
+
+multi_proxy_template
+template<typename AnotherProxy>
+void multi_proxy_type::insert(size_t where, AnotherProxy&& proxy)
+	requires (!IsConst && has_tags_v<AnotherProxy>)
+{
+	using InnerTags = AnotherProxy::tags;
+	using CurrentTags = Base::tags;
+
+	static_assert(tuple_is_similar<InnerTags, CurrentTags>,
+		"tags of the copied proxy do not match the current proxy");
+
+	auto insert_default = [&]<typename Tag>() {
+		std::vector<typename Tag::type> default_vec(proxy.size(), typename Tag::type());
+		this->insert_container<Tag>(where, std::move(default_vec));
+	};
+
+	auto insert_from_proxy = [&]<typename Tag>() {
+		if constexpr (tuple_contains_v<Tag, InnerTags>) {
+			this->insert_container<Tag>(where,
+				std::move(proxy.template mutable_vector<Tag>()));
+		}
+		else {
+			this->template call<Tag>(insert_default);
+		}
+	};
+
+	((this->template call<SelectedTags>(insert_from_proxy)), ...);
+
+	execute_for_other(insert_default);
+}
 
 multi_proxy_template
 template<typename AnotherProxy>
@@ -78,7 +131,7 @@ void multi_proxy_type::insert(size_t where, const AnotherProxy& proxy)
 
 	auto insert_default = [&]<typename Tag>() {
 		std::vector<typename Tag::type> default_vec(proxy.size(), typename Tag::type());
-		this->insert_container<Tag>(where, default_vec);
+		this->insert_container<Tag>(where, std::move(default_vec));
 	};
 
 	auto insert_from_proxy = [&]<typename Tag>() {
@@ -100,11 +153,8 @@ template<typename... T>
 void multi_proxy_type::push_back(T&&... value) requires (!IsConst &&
 	(std::is_same_v<std::decay_t<T>, typename SelectedTags::type> && ...))
 {
-	static_assert(
-	(std::is_same_v<std::decay_t<T>, typename SelectedTags::type> && ...),
-	"Type mismatch");
 
-	insert(this->size(), value...);
+	insert(this->size(), std::forward<T>(value)...);
 }
 multi_proxy_template
 void multi_proxy_type::pop_back() requires (!IsConst)
@@ -114,7 +164,7 @@ void multi_proxy_type::pop_back() requires (!IsConst)
 
 multi_proxy_template
 template<typename... Containers>
-void multi_proxy_type::insert_containers(size_t where, const Containers&... containers) requires (!IsConst)
+void multi_proxy_type::insert_containers(size_t where, Containers&&... containers) requires (!IsConst)
 {
 	static_assert(sizeof...(Containers) == sizeof...(SelectedTags),
 		"Number of containers must match number of selected tags");
@@ -132,7 +182,8 @@ void multi_proxy_type::insert_containers(size_t where, const Containers&... cont
 	size_t max_size = 0;
 	((max_size = std::max(max_size, containers.size())), ...);
 
-	(insert_container<SelectedTags>(where, containers), ...);
+	(insert_container<SelectedTags>(where,
+		std::forward<Containers>(containers)), ...);
 
 	auto inserter = [&]<typename Tag>() {
 		vec_type<Tag> default_vec(max_size, typename Tag::type());
@@ -189,10 +240,12 @@ void multi_proxy_type::upload(size_t where,
 	T&&... values) requires (!IsConst &&
 	(std::is_same_v<std::decay_t<T>, typename SelectedTags::type> && ...))
 {
-	static_assert(
-	(std::is_same_v<std::decay_t<T>, typename SelectedTags::type> && ...),
-	"Type mismatch");
-	upload_list(where, { values }...);
+	if (where >= this->size()) {
+		this->resize(where + 1);
+	}
+
+	((this->template mutable_vector<SelectedTags>()[where] = std::forward<T>(values)),
+	...);
 }
 
 multi_proxy_template
@@ -242,25 +295,30 @@ void multi_proxy_type::resize(size_t new_size) requires (!IsConst)
 }
 
 multi_proxy_template
-void multi_proxy_type::resize(size_t new_size, const SelectedTags::type&... values) requires (!IsConst)
+template<typename... T>
+void multi_proxy_type::resize(size_t new_size, T&&... values)
+	requires (!IsConst &&
+	(std::is_same_v<std::decay_t<T>, typename SelectedTags::type> && ...))
 {
-	((this->template mutable_vector<SelectedTags>().resize(new_size, values)), ...);
+	auto values_tuple = std::forward_as_tuple(std::forward<T>(values)...);
 
-	auto reserve_one = [&]<typename Tag>() {
-		this->template mutable_vector<Tag>().resize(new_size, typename Tag::type());
-	};
-
-	execute_for_other(reserve_one);
+	[&] <size_t... Is>(std::index_sequence<Is...>) {
+		((this->template mutable_vector<SelectedTags>().resize(new_size,
+		 std::get<Is>(values_tuple))), ...);
+	}(std::index_sequence_for<T...>{});
 }
 
 multi_proxy_template
-void multi_proxy_type::insert(size_t where, size_t n, const SelectedTags::type&... values) requires (!IsConst)
+template<typename... T>
+void multi_proxy_type::insert(size_t where, size_t n, T&&... values)
+	requires (!IsConst &&
+	(std::is_same_v<std::decay_t<T>, typename SelectedTags::type> && ...))
 {
 	if (where > this->size()) {
 		throw std::out_of_range("Insert position out of range");
 	}
 
-	((insert_one<SelectedTags>(where, n, values)), ...);
+	((insert_one<SelectedTags>(where, n, std::forward<T>(values))), ...);
 
 	auto inserter = [&]<typename Tag>() {
 		insert_one<Tag>(where, n, typename Tag::type());
@@ -270,9 +328,12 @@ void multi_proxy_type::insert(size_t where, size_t n, const SelectedTags::type&.
 }
 
 multi_proxy_template
-void multi_proxy_type::insert(size_t where, const SelectedTags::type&... values) requires (!IsConst)
+template<typename... T>
+void multi_proxy_type::insert(size_t where, T&&... values)
+	requires (!IsConst &&
+	(std::is_same_v<std::decay_t<T>, typename SelectedTags::type> && ...))
 {
-	insert(where, 1, values...);
+	insert(where, 1, std::forward<T>(values)...);
 }
 
 multi_proxy_template

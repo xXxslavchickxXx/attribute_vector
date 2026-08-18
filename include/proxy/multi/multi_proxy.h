@@ -23,16 +23,26 @@ public:
 	void insert(size_t where, const AnotherProxy& proxy)
 		requires (!IsConst && has_tags_v<AnotherProxy>);
 
+	template<typename AnotherProxy>
+	void insert(size_t where, AnotherProxy&& proxy)
+		requires (!IsConst && has_tags_v<AnotherProxy>);
+
 	template<typename... Containers>
-	void insert_containers(size_t where, const Containers&... containers)
+	void insert_containers(size_t where, Containers&&... containers)
 		requires (!IsConst);
 	void insert_list(size_t where,
 		const std::initializer_list<typename SelectedTags::type>&... lists)
 		requires (!IsConst);
+
+	template<typename... T>
 	void insert(size_t where, size_t n,
-				const SelectedTags::type&... values) requires (!IsConst);
+				T&&... values) requires (!IsConst &&
+		(std::is_same_v<std::decay_t<T>, typename SelectedTags::type> && ...));
+
+	template<typename... T>
 	void insert(size_t where,
-				const SelectedTags::type&... values) requires (!IsConst);
+				T&&... values) requires (!IsConst &&
+		(std::is_same_v<std::decay_t<T>, typename SelectedTags::type> && ...));
 
 	/// Методы удаления
 	void erase(size_t where) requires (!IsConst);
@@ -42,14 +52,23 @@ public:
 	/// Методы резервирования и ресайзов
 	void reserve(size_t new_capacity) requires (!IsConst);
 	void resize(size_t new_size) requires (!IsConst);
-	void resize(size_t new_size, const SelectedTags::type&... values) requires (!IsConst);
+
+	template<typename... T>
+	void resize(size_t new_size, T&&... values)
+		requires (!IsConst &&
+		(std::is_same_v<std::decay_t<T>, typename SelectedTags::type> && ...));
 
 	/// Методы аплоада даты в текущие данные
 	template<typename AnotherProxy>
-	void upload(size_t where, const AnotherProxy& proxy) requires (!IsConst && has_tags_v<AnotherProxy>);
+	void upload(size_t where, AnotherProxy&& proxy)
+		requires (!IsConst && has_tags_v<AnotherProxy>);
+	template<typename AnotherProxy>
+	void upload(size_t where, const AnotherProxy& proxy)
+		requires (!IsConst && has_tags_v<AnotherProxy>);
 
 	template<typename... Containers>
-	void upload_containers(size_t where, Containers&&... containers) requires (!IsConst);
+	void upload_containers(size_t where, Containers&&... containers)
+		requires (!IsConst);
 	
 	template<typename... T>
 	void upload_list(size_t where,

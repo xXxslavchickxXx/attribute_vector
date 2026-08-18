@@ -4,8 +4,6 @@
 #include "../type_traits/type_traits.h"
 #include <proxy/base/base.h>
 
-
-
 template<IsAttributeVector AttributeVectorT, bool IsConst, typename Tag>
 class single_proxy;
 
