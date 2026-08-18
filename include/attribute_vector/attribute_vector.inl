@@ -45,6 +45,17 @@ void attribute_vector<Vec, Tags...>::
 template<template<typename...> typename Vec, typename... Tags>
 template<template<typename...> typename AnotherVec, typename... AnotherTags>
 void attribute_vector<Vec, Tags...>::
+	insert(size_t where, attribute_vector<AnotherVec, AnotherTags...>&& vec)
+{
+	static_assert(tuple_is_similar<std::tuple<Tags...>, std::tuple<AnotherTags...>>, 
+		"The tags of the copied attribute_vector do not contain the current attribute_vector.");
+	this->with<Tags...>().insert(where,
+		std::move(vec.template with<AnotherTags...>()));
+}
+
+template<template<typename...> typename Vec, typename... Tags>
+template<template<typename...> typename AnotherVec, typename... AnotherTags>
+void attribute_vector<Vec, Tags...>::
 	insert(size_t where, const attribute_vector<AnotherVec, AnotherTags...>& vec)
 {
 	static_assert(tuple_is_similar<std::tuple<Tags...>, std::tuple<AnotherTags...>>, 

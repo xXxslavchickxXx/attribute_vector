@@ -45,6 +45,8 @@ public:
 
 	template<template<typename...> typename AnotherVec, typename... AnotherTags>
 	void insert(size_t where, const attribute_vector<AnotherVec, AnotherTags...>& vec);
+	template<template<typename...> typename AnotherVec, typename... AnotherTags>
+	void insert(size_t where, attribute_vector<AnotherVec, AnotherTags...>&& vec);
 
 	void erase(size_t where);
 	void erase(size_t where, size_t count);

@@ -85,14 +85,16 @@ public:
 
     // Загрузка данных 'upload' – обёртки над методами MultiProxy
     template<typename Container>
-    void upload_containers(size_t where, const Container& container) requires (!IsConst) {
-        static_assert(std::is_same_v<typename Container::value_type, typename Tag::type>,
+    void upload_containers(size_t where, Container&& container) requires (!IsConst) {
+        static_assert(std::is_same_v<typename std::decay_t<Container>::value_type,
+                                     typename Tag::type>,
             "Container value type does not match tag type");
-        Base::upload_containers(where, container);
+        Base::upload_containers(where, std::forward<Container>(container));
     }
 
-    void insert_containers(size_t where, const std::vector<typename Tag::type>& container) requires (!IsConst) {
+    template<typename Container>
+    void insert_containers(size_t where, Container&& container) requires (!IsConst) {
         if (where > this->size()) throw std::out_of_range("Insert position out of range");
-        Base::insert_containers(where, container);
+        Base::insert_containers(where, std::forward<Container>(container));
     }
 };
