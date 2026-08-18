@@ -24,10 +24,15 @@ public:
 		requires (!IsConst && has_tags_v<AnotherProxy>);
 
 	template<typename... Containers>
-	void insert_containers(size_t where, const Containers&... containers) requires (!IsConst);
-	void insert_list(size_t where, const std::initializer_list<typename SelectedTags::type>&... lists) requires (!IsConst);
-	void insert(size_t where, size_t n, const SelectedTags::type&... values) requires (!IsConst);
-	void insert(size_t where, const SelectedTags::type&... values) requires (!IsConst);
+	void insert_containers(size_t where, const Containers&... containers)
+		requires (!IsConst);
+	void insert_list(size_t where,
+		const std::initializer_list<typename SelectedTags::type>&... lists)
+		requires (!IsConst);
+	void insert(size_t where, size_t n,
+				const SelectedTags::type&... values) requires (!IsConst);
+	void insert(size_t where,
+				const SelectedTags::type&... values) requires (!IsConst);
 
 	/// Методы удаления
 	void erase(size_t where) requires (!IsConst);
@@ -44,12 +49,23 @@ public:
 	void upload(size_t where, const AnotherProxy& proxy) requires (!IsConst && has_tags_v<AnotherProxy>);
 
 	template<typename... Containers>
-	void upload_containers(size_t where, const Containers&... containers) requires (!IsConst);
-	void upload_list(size_t where, const std::initializer_list<typename SelectedTags::type>&... lists) requires (!IsConst);
-	void upload(size_t where, const SelectedTags::type&... values) requires (!IsConst);
+	void upload_containers(size_t where, Containers&&... containers) requires (!IsConst);
+	
+	template<typename... T>
+	void upload_list(size_t where,
+	const std::initializer_list<T>&... lists)
+		requires (!IsConst &&
+	(std::is_same_v<std::decay_t<T>, typename SelectedTags::type> && ...));
+
+	template<typename... T>
+	void upload(size_t where, T&&... values)
+		requires (!IsConst &&
+	(std::is_same_v<std::decay_t<T>, typename SelectedTags::type> && ...));
 
 	/// Классические методы для работы с концом векторов
-	void push_back(const SelectedTags::type&... value) requires (!IsConst);
+	template<typename... T>
+	void push_back(T&&... value) requires (!IsConst &&
+	(std::is_same_v<std::decay_t<T>, typename SelectedTags::type> && ...));
 	void pop_back() requires (!IsConst);
 	
 	template<typename Tag>
@@ -71,12 +87,12 @@ private:
 	template<typename F>
 	void execute_for_all(F&& func);
 
-	template<typename Tag>
-	void insert_one(size_t where, size_t n, const Tag::type& value);
+	template<typename Tag, typename T>
+	void insert_one(size_t where, size_t n, T&& value);
 	template<typename Tag, typename Container>
-	void insert_container(size_t where, const Container& container);
+	void insert_container(size_t where, Container&& container);
 	template<typename Tag, typename Container>
-	void upload_one(size_t where, const Container& container);
+	void upload_one(size_t where, Container&& container);
 };
 
 

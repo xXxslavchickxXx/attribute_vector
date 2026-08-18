@@ -96,8 +96,14 @@ void multi_proxy_type::insert(size_t where, const AnotherProxy& proxy)
 }
 
 multi_proxy_template
-void multi_proxy_type::push_back(const SelectedTags::type&... value) requires (!IsConst)
+template<typename... T>
+void multi_proxy_type::push_back(T&&... value) requires (!IsConst &&
+	(std::is_same_v<std::decay_t<T>, typename SelectedTags::type> && ...))
 {
+	static_assert(
+	(std::is_same_v<std::decay_t<T>, typename SelectedTags::type> && ...),
+	"Type mismatch");
+
 	insert(this->size(), value...);
 }
 multi_proxy_template
@@ -144,7 +150,7 @@ void multi_proxy_type::insert_list(size_t where, const std::initializer_list<typ
 
 multi_proxy_template
 template<typename... Containers>
-void multi_proxy_type::upload_containers(size_t where, const Containers&... containers) requires (!IsConst)
+void multi_proxy_type::upload_containers(size_t where, Containers&&... containers) requires (!IsConst)
 {
 	static_assert(sizeof...(Containers) == sizeof...(SelectedTags),
 		"Number of containers must match number of selected tags");
@@ -164,18 +170,28 @@ void multi_proxy_type::upload_containers(size_t where, const Containers&... cont
 		resize(max_size + where);
 	}
 
-	((upload_one<SelectedTags>(where, containers)), ...);
+	((upload_one<SelectedTags>(where, std::forward<Containers>(containers))), ...);
 }
 	
 multi_proxy_template
-void multi_proxy_type::upload_list(size_t where, const std::initializer_list<typename SelectedTags::type>&... lists) requires (!IsConst)
+template<typename... T>
+void multi_proxy_type::upload_list(size_t where,
+	const std::initializer_list<T>&... lists)
+	requires (!IsConst &&
+(std::is_same_v<std::decay_t<T>, typename SelectedTags::type> && ...))
 {
 	upload_containers(where, lists...);
 }
 	
 multi_proxy_template
-void multi_proxy_type::upload(size_t where, const SelectedTags::type&... values) requires (!IsConst)
+template<typename... T>
+void multi_proxy_type::upload(size_t where,
+	T&&... values) requires (!IsConst &&
+	(std::is_same_v<std::decay_t<T>, typename SelectedTags::type> && ...))
 {
+	static_assert(
+	(std::is_same_v<std::decay_t<T>, typename SelectedTags::type> && ...),
+	"Type mismatch");
 	upload_list(where, { values }...);
 }
 
@@ -285,20 +301,28 @@ void multi_proxy_type::execute_for_all(F&& func)
 }
 
 multi_proxy_template
-template<typename Tag>
-void multi_proxy_type::insert_one(size_t where, size_t n, const Tag::type& value) {
+template<typename Tag, typename T>
+void multi_proxy_type::insert_one(size_t where, size_t n, T&& value) {
+	static_assert(std::is_same_v<std::decay_t<T>, typename Tag::type>,
+					  "Type mismatch!");
+
 	auto& vec = this->template mutable_vector<Tag>();
-	vec.insert(vec.begin() + where, n, value);
+
+	vec.insert(vec.begin() + where, n, std::forward<T>(value));
 }
 multi_proxy_template
 template<typename Tag, typename Container>
-void multi_proxy_type::insert_container(size_t where, const Container& container) {
+void multi_proxy_type::insert_container(size_t where, Container&& container) {
 	auto& vec = this->template mutable_vector<Tag>();
-	vec.insert(vec.begin() + where, container.begin(), container.end());
+
+	auto&& c = std::forward<Container>(container);
+	vec.insert(vec.begin() + where,
+		std::make_move_iterator(c.begin()),
+		std::make_move_iterator(c.end()));
 }
 multi_proxy_template
 template<typename Tag, typename Container>
-void multi_proxy_type::upload_one(size_t where, const Container& container) {
+void multi_proxy_type::upload_one(size_t where, Container&& container) {
 	auto& vec = this->template mutable_vector<Tag>();
 	size_t needed_size = where + container.size();
 
@@ -306,5 +330,9 @@ void multi_proxy_type::upload_one(size_t where, const Container& container) {
 		this->resize(needed_size);
 	}
 
-	std::copy(container.begin(), container.end(), vec.begin() + where);
+	auto&& c = std::forward<Container>(container);
+	std::copy(
+		std::make_move_iterator(c.begin()),
+		std::make_move_iterator(c.end()),
+		vec.begin() + where);
 }

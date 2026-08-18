@@ -1,7 +1,6 @@
 #include <iostream>
 #include <attribute_vector/attribute_vector.h>
 #include <glm_io/io.h>
-#include <test_tags/tags.h>
 
 //using namespace test;
 
