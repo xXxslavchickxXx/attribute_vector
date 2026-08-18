@@ -41,8 +41,6 @@ public:
 	constexpr bool empty() const noexcept;
 	constexpr size_t capacity() const noexcept;
 
-	void show_vector() const;
-
 	template<template<typename...> typename AnotherVec, typename... AnotherTags>
 	void insert(size_t where, const attribute_vector<AnotherVec, AnotherTags...>& vec);
 	template<template<typename...> typename AnotherVec, typename... AnotherTags>
@@ -80,8 +78,6 @@ public:
 /// Поленые методы
 /// </summary>
 private:
-	template<size_t... Is>
-	void show_vector_impl(std::index_sequence<Is...>) const;
 
 	void validate_sizes() const;
 };

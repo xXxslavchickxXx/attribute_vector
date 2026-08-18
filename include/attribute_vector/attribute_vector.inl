@@ -97,16 +97,6 @@ attribute_vector<Vec, Tags...>::attribute_vector(Containers&&... containers) req
 }
 
 template<template<typename...> typename Vec, typename... Tags>
-void attribute_vector<Vec, Tags...>::show_vector() const {
-	show_vector_impl(std::index_sequence_for<Tags...>{});
-}
-template<template<typename...> typename Vec, typename... Tags>
-template<size_t... Is>
-void attribute_vector<Vec, Tags...>::show_vector_impl(std::index_sequence<Is...>) const {
-	((std::cout << std::get<Is>(_data)), ...);
-}
-
-template<template<typename...> typename Vec, typename... Tags>
 template<typename... SelectedTags>
 auto attribute_vector<Vec, Tags...>::with() {
 	static_assert((hasTag<SelectedTags, Tags...>() && ...),
